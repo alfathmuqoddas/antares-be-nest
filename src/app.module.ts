@@ -21,7 +21,7 @@ import { UsersModule } from './users/users.module';
       port: 3306,
       username: 'root',
       password: 'root',
-      database: 'test',
+      database: 'nest-product-be',
       entities: [Component, Category],
       synchronize: true,
     }),
