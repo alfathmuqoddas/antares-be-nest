@@ -11,6 +11,8 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { CreateUserDto, LoginDto } from 'src/users/dto/create-user.dto';
+import { log } from 'console';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -22,8 +24,17 @@ export class AuthController {
   @ApiOkResponse({
     description: 'Returns the user object if the credentials are valid.',
   })
-  signIn(@Body() body: { email: string; password: string }) {
-    return this.authService.signIn(body.email, body.password);
+  signIn(@Body() loginDto: LoginDto) {
+    return this.authService.signIn(loginDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('register')
+  @ApiOkResponse({
+    description: 'Returns the user object if the credentials are valid.',
+  })
+  signUp(@Body() createUsersDto: CreateUserDto): Promise<{ message: string }> {
+    return this.authService.signUp(createUsersDto);
   }
 
   @UseGuards(AuthGuard)
