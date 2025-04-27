@@ -1,4 +1,3 @@
-// src/users/user.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,31 +8,30 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
-export class User {
+export class Seat {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty()
   @Column()
-  name: string;
-
-  @ApiProperty()
-  @Column({ unique: true })
-  email: string;
-
-  @Column() // Password should not be exposed in API docs
-  password?: string; // Make it optional for create/update DTOs
+  screenId: number;
 
   @ApiProperty()
   @Column()
-  isAdmin: boolean;
+  rowNumber: number;
 
   @ApiProperty()
+  @Column()
+  columnNumber: number;
+
+  @ApiProperty()
+  @Column()
+  isAvailable: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 
-  @ApiProperty()
   @UpdateDateColumn()
   updatedAt: Date;
 }

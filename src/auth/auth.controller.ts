@@ -12,7 +12,6 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { CreateUserDto, LoginDto } from 'src/users/dto/create-user.dto';
-import { log } from 'console';
 
 @ApiTags('Auth')
 @Controller('api/auth')

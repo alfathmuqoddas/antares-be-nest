@@ -10,6 +10,13 @@ import { Category } from './categories/entities/category.entity';
 import { User } from './users/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { MoviesModule } from './movies/movies.module';
+import { TheatersModule } from './theaters/theaters.module';
+import { ScreensModule } from './screens/screens.module';
+import { ShowtimesModule } from './showtimes/showtimes.module';
+import { SeatsModule } from './seats/seats.module';
+import { BookingsModule } from './bookings/bookings.module';
+import { BookingSeatsModule } from './booking_seats/booking_seats.module';
 
 @Module({
   imports: [
@@ -30,6 +37,13 @@ import { UsersModule } from './users/users.module';
     CategoriesModule,
     AuthModule,
     UsersModule,
+    MoviesModule,
+    TheatersModule,
+    ScreensModule,
+    ShowtimesModule,
+    SeatsModule,
+    BookingsModule,
+    BookingSeatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

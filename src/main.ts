@@ -12,7 +12,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('_api', app, document); // Setup Swagger UI at /api
+  SwaggerModule.setup('_api', app, document); // Setup Swagger UI at /_api
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT ?? 3000);
 }
