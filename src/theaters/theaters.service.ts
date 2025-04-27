@@ -1,19 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Theater } from './entities/theater.entity';
 import { CreateTheaterDto } from './dto/create-theater.dto';
 import { UpdateTheaterDto } from './dto/update-theater.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TheatersService {
-  create(createTheaterDto: CreateTheaterDto) {
-    return 'This action adds a new theater';
+  constructor(
+    @InjectRepository(Theater)
+    private theaterRepository: Repository<Theater>,
+  ) {}
+  async create(createTheaterDto: CreateTheaterDto): Promise<void> {
+    await this.theaterRepository.save(createTheaterDto);
   }
 
-  findAll() {
-    return `This action returns all theaters`;
+  async findAll(): Promise<Theater[]> {
+    const theaters = await this.theaterRepository.find();
+    return theaters;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} theater`;
+  async findOne(id: number): Promise<Theater> {
+    const theater = await this.theaterRepository.findOneBy({ id });
+    if (!theater) {
+      throw new Error('Theater not found');
+    }
+    return theater;
   }
 
   update(id: number, updateTheaterDto: UpdateTheaterDto) {

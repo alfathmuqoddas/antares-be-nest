@@ -23,7 +23,7 @@ export class AuthController {
   @ApiOkResponse({
     description: 'Returns the user object if the credentials are valid.',
   })
-  signIn(@Body() loginDto: LoginDto) {
+  async signIn(@Body() loginDto: LoginDto) {
     return this.authService.signIn(loginDto);
   }
 
@@ -32,7 +32,9 @@ export class AuthController {
   @ApiOkResponse({
     description: 'Returns the user object if the credentials are valid.',
   })
-  signUp(@Body() createUsersDto: CreateUserDto): Promise<{ message: string }> {
+  async signUp(
+    @Body() createUsersDto: CreateUserDto,
+  ): Promise<{ message: string }> {
     return this.authService.signUp(createUsersDto);
   }
 
@@ -41,7 +43,7 @@ export class AuthController {
   @ApiOkResponse({
     description: 'Returns the user object if the credentials are valid.',
   })
-  getProfile(@Request() req: any): any {
+  async getProfile(@Request() req: any): Promise<any> {
     return req.user;
   }
 }

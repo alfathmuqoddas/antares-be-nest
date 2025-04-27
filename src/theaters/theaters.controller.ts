@@ -1,33 +1,61 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TheatersService } from './theaters.service';
 import { CreateTheaterDto } from './dto/create-theater.dto';
 import { UpdateTheaterDto } from './dto/update-theater.dto';
+import { Theater } from './entities/theater.entity';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 
-@Controller('theaters')
+@ApiTags('Theaters')
+@Controller('api/theaters')
 export class TheatersController {
   constructor(private readonly theatersService: TheatersService) {}
 
   @Post()
-  create(@Body() createTheaterDto: CreateTheaterDto) {
+  @ApiCreatedResponse({
+    description: 'The theater has been successfully created.',
+    type: TheatersController,
+  })
+  async create(@Body() createTheaterDto: CreateTheaterDto): Promise<void> {
     return this.theatersService.create(createTheaterDto);
   }
 
   @Get()
-  findAll() {
+  @ApiOkResponse({
+    description: 'Returns all theaters.',
+    type: Theater,
+  })
+  async findAll(): Promise<Theater[]> {
     return this.theatersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  @ApiOkResponse({ description: 'Returns a theater by id.', type: Theater })
+  findOne(@Param('id') id: string): Promise<Theater> {
     return this.theatersService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({
+    description: 'Theater successfully updated.',
+    type: Theater,
+  })
   update(@Param('id') id: string, @Body() updateTheaterDto: UpdateTheaterDto) {
     return this.theatersService.update(+id, updateTheaterDto);
   }
 
   @Delete(':id')
+  @ApiOkResponse({
+    description: 'Theater successfully deleted.',
+    type: Theater,
+  })
   remove(@Param('id') id: string) {
     return this.theatersService.remove(+id);
   }
