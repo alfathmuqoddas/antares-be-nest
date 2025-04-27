@@ -15,66 +15,66 @@ export class Movie {
   id: number;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   imdbId: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   title: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   year: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   rated: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   released: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({ default: '' })
   runtime: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   genre: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({ default: '' })
   director: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({ default: '' })
   writer: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({ default: '' })
   actors: string;
 
   @ApiProperty()
-  @Column('text')
+  @Column({ default: '' })
   plot: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   language: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   country: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   awards: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: '' })
   poster: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: '' })
   imdbRating: string;
 
   @CreateDateColumn()

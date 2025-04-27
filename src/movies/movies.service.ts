@@ -1,19 +1,99 @@
-import { Injectable } from '@nestjs/common';
-import { CreateMovieDto } from './dto/create-movie.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { Repository } from 'typeorm';
+import { AxiosResponse } from 'axios';
+import { map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { Movie } from './entities/movie.entity';
+import { CreateMovieDto, MovieResponseDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class MoviesService {
-  create(createMovieDto: CreateMovieDto) {
-    return 'This action adds a new movie';
+  constructor(
+    private httpService: HttpService,
+
+    @InjectRepository(Movie)
+    private movieRepository: Repository<Movie>,
+  ) {}
+
+  async fetchMovieDataAndSave(imdbId: string): Promise<void> {
+    try {
+      const movie = await this.movieRepository.findOneBy({ imdbId });
+      if (movie) {
+        return;
+      }
+      const response = await this.httpService
+        .get<MovieResponseDto>(
+          `https://www.omdbapi.com/?i=${imdbId}&plot=full&apiKey=af1284eb`,
+        )
+        .pipe(
+          map(
+            (axiosResponse: AxiosResponse<MovieResponseDto>) =>
+              axiosResponse.data,
+          ),
+          catchError((error) => {
+            console.error('Error fetching movie data', error);
+            return of(null);
+          }),
+        )
+        .toPromise();
+
+      if (response) {
+        const movie = new Movie();
+        movie.imdbId = response.imdbID;
+        movie.title = response.Title;
+        movie.year = response.Year;
+        movie.rated = response.Rated;
+        movie.released = response.Released;
+        movie.runtime = response.Runtime;
+        movie.genre = response.Genre;
+        movie.director = response.Director;
+        movie.writer = response.Writer;
+        movie.actors = response.Actors;
+        movie.plot = response.Plot;
+        movie.language = response.Language;
+        movie.country = response.Country;
+        movie.awards = response.Awards;
+        movie.poster = response.Poster;
+        movie.imdbRating = response.imdbRating;
+
+        await this.movieRepository.save(movie);
+        console.log('Movie data saved successfully');
+      } else {
+        console.log('No movie data found');
+      }
+    } catch (error) {
+      console.error('Unexpected error fetching movie data', error);
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all movies`;
+  async create(createMovieDto: CreateMovieDto) {
+    await this.movieRepository.save(createMovieDto);
+    return createMovieDto;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  async findAll(): Promise<Movie[]> {
+    const movies = await this.movieRepository.find();
+    return movies;
+  }
+
+  async findOne(id: number): Promise<Movie> {
+    const movie = await this.movieRepository.findOneBy({ id });
+    if (!movie) {
+      throw new NotFoundException('Movie not found');
+    }
+    return movie;
+  }
+
+  async findOneByImdbId(imdbId: string): Promise<Movie> {
+    const movie = await this.movieRepository.findOneBy({ imdbId });
+    if (!movie) {
+      throw new NotFoundException('Movie not found');
+    }
+    return movie;
   }
 
   update(id: number, updateMovieDto: UpdateMovieDto) {
