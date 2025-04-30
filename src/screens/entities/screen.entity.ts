@@ -6,9 +6,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Theater } from 'src/theaters/entities/theater.entity';
+import { Showtime } from 'src/showtimes/entities/showtime.entity';
 
 @Entity()
 export class Screen {
@@ -33,6 +35,9 @@ export class Screen {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Showtime, (showtime) => showtime.screen)
+  showtimes: Showtime[];
 
   @ManyToOne(() => Theater, (theater) => theater.screens)
   @JoinColumn({ name: 'theaterId' })

@@ -5,8 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Showtime } from 'src/showtimes/entities/showtime.entity';
 
 @Entity()
 export class Movie {
@@ -82,4 +84,7 @@ export class Movie {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Showtime, (showtime) => showtime.movie)
+  showtimes: Showtime[];
 }
