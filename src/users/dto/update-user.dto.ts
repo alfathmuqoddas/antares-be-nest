@@ -6,7 +6,7 @@ export class UpdateUserDto {
   @IsEmail()
   email: string;
 
-  isAdmin: boolean;
+  roles: string;
 
   password: string;
 }

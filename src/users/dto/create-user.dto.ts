@@ -10,8 +10,8 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty()
-  @IsBoolean()
-  isAdmin: boolean;
+  @IsString()
+  roles: string;
 
   @IsNotEmpty()
   @IsString()

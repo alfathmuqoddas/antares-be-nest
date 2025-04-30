@@ -11,7 +11,10 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { RolesGuard } from './roles.guard';
+import { Role } from 'src/enums/role.enum';
 import { CreateUserDto, LoginDto } from 'src/users/dto/create-user.dto';
+import { Roles } from 'src/decorator/roles.decorator';
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -43,7 +46,17 @@ export class AuthController {
   @ApiOkResponse({
     description: 'Returns the user object if the credentials are valid.',
   })
-  async getProfile(@Request() req: any): Promise<any> {
+  getProfile(@Request() req: any): Promise<any> {
+    return req.user;
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Get('admin-test')
+  @Roles(Role.Admin)
+  @ApiOkResponse({
+    description: 'Returns the user object if the credentials are valid.',
+  })
+  async adminTest(@Request() req: any): Promise<any> {
     return req.user;
   }
 }
