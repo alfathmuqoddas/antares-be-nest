@@ -11,17 +11,22 @@ export class TheatersService {
     @InjectRepository(Theater)
     private theaterRepository: Repository<Theater>,
   ) {}
-  async create(createTheaterDto: CreateTheaterDto): Promise<void> {
-    await this.theaterRepository.save(createTheaterDto);
+  create(createTheaterDto: CreateTheaterDto) {
+    this.theaterRepository.save(createTheaterDto);
   }
 
   async findAll(): Promise<Theater[]> {
-    const theaters = await this.theaterRepository.find();
+    const theaters = await this.theaterRepository.find({
+      relations: ['screens'],
+    });
     return theaters;
   }
 
   async findOne(id: number): Promise<Theater> {
-    const theater = await this.theaterRepository.findOneBy({ id });
+    const theater = await this.theaterRepository.findOne({
+      where: { id },
+      relations: ['screens'],
+    });
     if (!theater) {
       throw new Error('Theater not found');
     }

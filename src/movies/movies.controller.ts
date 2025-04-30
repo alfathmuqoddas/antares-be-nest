@@ -7,12 +7,12 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Movies')
 @Controller('api/movies')
 export class MoviesController {

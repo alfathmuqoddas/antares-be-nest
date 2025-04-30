@@ -4,8 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Screen } from '../../screens/entities/screen.entity';
 
 @Entity()
 export class Theater {
@@ -38,4 +40,7 @@ export class Theater {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Screen, (screen) => screen.theater)
+  screens: Screen[];
 }

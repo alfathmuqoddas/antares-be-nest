@@ -1,19 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { CreateScreenDto } from './dto/create-screen.dto';
 import { UpdateScreenDto } from './dto/update-screen.dto';
+import { Repository } from 'typeorm';
+import { Screen } from './entities/screen.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TheatersService } from 'src/theaters/theaters.service';
 
 @Injectable()
 export class ScreensService {
-  create(createScreenDto: CreateScreenDto) {
-    return 'This action adds a new screen';
+  constructor(
+    @InjectRepository(Screen)
+    private screenRepository: Repository<Screen>,
+    private theatersService: TheatersService,
+  ) {}
+  async create(createScreenDto: CreateScreenDto): Promise<Screen> {
+    const newScreen = this.screenRepository.create(createScreenDto);
+    if (createScreenDto.theaterId) {
+      const theater = await this.theatersService.findOne(
+        createScreenDto.theaterId,
+      );
+      if (!theater) {
+        throw new Error('Theater not found');
+      }
+      newScreen.theater = theater;
+    }
+    return this.screenRepository.save(newScreen);
   }
 
-  findAll() {
-    return `This action returns all screens`;
+  async findAll(): Promise<Screen[]> {
+    return this.screenRepository.find({
+      relations: ['theater'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} screen`;
+  async findOne(id: number): Promise<Screen | undefined> {
+    const screen = await this.screenRepository.findOne({
+      where: { id },
+      relations: ['theater'],
+    });
+    if (!screen) {
+      throw new Error('Screen not found');
+    }
+    return screen;
   }
 
   update(id: number, updateScreenDto: UpdateScreenDto) {

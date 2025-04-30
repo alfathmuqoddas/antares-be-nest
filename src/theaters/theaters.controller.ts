@@ -23,8 +23,11 @@ export class TheatersController {
     description: 'The theater has been successfully created.',
     type: TheatersController,
   })
-  async create(@Body() createTheaterDto: CreateTheaterDto): Promise<void> {
-    return this.theatersService.create(createTheaterDto);
+  async create(
+    @Body() createTheaterDto: CreateTheaterDto,
+  ): Promise<{ message: string }> {
+    this.theatersService.create(createTheaterDto);
+    return { message: 'Theater created successfully' };
   }
 
   @Get()
