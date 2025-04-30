@@ -29,14 +29,14 @@ export class ScreensService {
 
   async findAll(): Promise<Screen[]> {
     return this.screenRepository.find({
-      relations: ['theater'],
+      relations: ['theater', 'showtimes'],
     });
   }
 
   async findOne(id: number): Promise<Screen | undefined> {
     const screen = await this.screenRepository.findOne({
       where: { id },
-      relations: ['theater'],
+      relations: ['theater', 'showtimes'],
     });
     if (!screen) {
       throw new Error('Screen not found');

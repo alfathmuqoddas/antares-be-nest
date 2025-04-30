@@ -9,5 +9,6 @@ import { TheatersModule } from 'src/theaters/theaters.module';
   imports: [TypeOrmModule.forFeature([Screen]), TheatersModule],
   controllers: [ScreensController],
   providers: [ScreensService],
+  exports: [ScreensService],
 })
 export class ScreensModule {}

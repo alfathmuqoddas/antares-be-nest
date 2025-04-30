@@ -9,5 +9,6 @@ import { HttpModule } from '@nestjs/axios';
   imports: [TypeOrmModule.forFeature([Movie]), HttpModule],
   controllers: [MoviesController],
   providers: [MoviesService],
+  exports: [MoviesService],
 })
 export class MoviesModule {}
