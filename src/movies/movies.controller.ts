@@ -12,6 +12,7 @@ import {
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { Movie } from './entities/movie.entity';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Movies')
 @Controller('api/movies')
@@ -23,30 +24,33 @@ export class MoviesController {
     description: 'Movie data successfully fetched.',
     type: MoviesController,
   })
-  async fetchMovieData(@Body() body: { imdbId: string }) {
-    return await this.moviesService.fetchMovieDataAndSave(body.imdbId);
+  async fetchMovieData(
+    @Body() body: { imdbId: string },
+  ): Promise<{ message: string }> {
+    await this.moviesService.fetchMovieDataAndSave(body.imdbId);
+    return { message: 'Movie data successfully fetched and saved' };
   }
 
   @Post()
   async create(
     @Body() createMovieDto: CreateMovieDto,
   ): Promise<{ message: string }> {
-    this.moviesService.create(createMovieDto);
+    await this.moviesService.create(createMovieDto);
     return { message: 'Movie created successfully' };
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<Movie[]> {
     return await this.moviesService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Movie> {
     return await this.moviesService.findOne(+id);
   }
 
   @Get('imdbId/:imdbId')
-  async findOneByImdbId(@Param('imdbId') imdbId: string) {
+  async findOneByImdbId(@Param('imdbId') imdbId: string): Promise<Movie> {
     return await this.moviesService.findOneByImdbId(imdbId);
   }
 
@@ -54,8 +58,9 @@ export class MoviesController {
   async update(
     @Param('id') id: string,
     @Body() updateMovieDto: UpdateMovieDto,
-  ) {
-    return await this.moviesService.update(+id, updateMovieDto);
+  ): Promise<{ message: string }> {
+    await this.moviesService.update(+id, updateMovieDto);
+    return { message: 'Movie updated successfully' };
   }
 
   @Delete(':id')
