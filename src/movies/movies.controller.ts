@@ -23,19 +23,13 @@ export class MoviesController {
     description: 'Movie data successfully fetched.',
     type: MoviesController,
   })
-  async fetchMovieData(
-    @Body() body: { imdbId: string },
-  ): Promise<{ message: string }> {
-    await this.moviesService.fetchMovieDataAndSave(body.imdbId);
-    return { message: 'Movie data fetched and saved successfully' };
+  fetchMovieData(@Body() body: { imdbId: string }) {
+    return this.moviesService.fetchMovieDataAndSave(body.imdbId);
   }
 
   @Post()
-  async create(
-    @Body() createMovieDto: CreateMovieDto,
-  ): Promise<{ message: string }> {
-    await this.moviesService.create(createMovieDto);
-    return { message: 'Movie created successfully' };
+  create(@Body() createMovieDto: CreateMovieDto) {
+    return this.moviesService.create(createMovieDto);
   }
 
   @Get()
@@ -60,6 +54,6 @@ export class MoviesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.moviesService.remove(+id);
+    return this.moviesService.remove(id);
   }
 }

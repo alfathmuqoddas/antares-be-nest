@@ -18,11 +18,11 @@ export class MoviesService {
     private movieRepository: Repository<Movie>,
   ) {}
 
-  async fetchMovieDataAndSave(imdbId: string): Promise<void> {
+  async fetchMovieDataAndSave(imdbId: string): Promise<{ message: string }> {
     try {
       const movie = await this.movieRepository.findOneBy({ imdbId });
       if (movie) {
-        return;
+        return { message: 'Movie data already exists' };
       }
       const response = await this.httpService
         .get<MovieResponseDto>(
@@ -60,19 +60,18 @@ export class MoviesService {
         movie.imdbRating = response.imdbRating;
 
         await this.movieRepository.save(movie);
-        console.log('Movie data saved successfully');
+        return { message: 'Movie data saved successfully' };
       } else {
-        console.log('No movie data found');
+        return { message: 'No movie data found' };
       }
     } catch (error) {
-      console.error('Unexpected error fetching movie data', error);
-      throw error;
+      return { message: 'Unexpected error fetching movie data' };
     }
   }
 
-  async create(createMovieDto: CreateMovieDto) {
+  async create(createMovieDto: CreateMovieDto): Promise<{ message: string }> {
     await this.movieRepository.save(createMovieDto);
-    return createMovieDto;
+    return { message: 'Movie created successfully' };
   }
 
   async findAll(): Promise<Movie[]> {
@@ -108,7 +107,12 @@ export class MoviesService {
     return `This action updates a #${id} movie`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
+  async remove(imdbId: string): Promise<{ message: string }> {
+    const movie = await this.movieRepository.findOne({ where: { imdbId } });
+    if (!movie) {
+      throw new NotFoundException('Movie not found');
+    }
+    this.movieRepository.remove(movie);
+    return { message: 'Movie removed successfully' };
   }
 }

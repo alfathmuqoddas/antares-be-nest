@@ -20,6 +20,7 @@ import { BookingSeatsModule } from './booking_seats/booking_seats.module';
 import { Movie } from './movies/entities/movie.entity';
 import { Theater } from './theaters/entities/theater.entity';
 import { Screen } from './screens/entities/screen.entity';
+import { Showtime } from './showtimes/entities/showtime.entity';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { Screen } from './screens/entities/screen.entity';
       username: 'root',
       password: 'root',
       database: 'nest-product-be',
-      entities: [Component, Category, User, Movie, Theater, Screen],
+      entities: [Component, Category, User, Movie, Theater, Screen, Showtime],
       synchronize: true,
     }),
     ComponentsModule,
