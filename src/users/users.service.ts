@@ -17,7 +17,7 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return await this.usersRepository.find();
   }
 
   async findOne(email: string): Promise<User> {
@@ -38,7 +38,7 @@ export class UsersService {
 
     const newUser = this.usersRepository.create(createUserDto);
 
-    return this.usersRepository.save(newUser);
+    return await this.usersRepository.save(newUser);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
@@ -55,6 +55,6 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    this.usersRepository.delete(id);
+    await this.usersRepository.delete(id);
   }
 }

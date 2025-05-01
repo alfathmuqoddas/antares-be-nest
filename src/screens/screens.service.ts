@@ -24,11 +24,11 @@ export class ScreensService {
       }
       newScreen.theater = theater;
     }
-    return this.screenRepository.save(newScreen);
+    return await this.screenRepository.save(newScreen);
   }
 
   async findAll(): Promise<Screen[]> {
-    return this.screenRepository.find({
+    return await this.screenRepository.find({
       relations: ['theater', 'showtimes'],
     });
   }

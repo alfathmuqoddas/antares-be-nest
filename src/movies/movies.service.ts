@@ -77,10 +77,9 @@ export class MoviesService {
   }
 
   async findAll(): Promise<Movie[]> {
-    const movies = await this.movieRepository.find({
+    return await this.movieRepository.find({
       relations: ['showtimes'],
     });
-    return movies;
   }
 
   async findOne(id: number): Promise<Movie> {
@@ -114,6 +113,6 @@ export class MoviesService {
     if (!movie) {
       throw new NotFoundException('Movie not found');
     }
-    return this.movieRepository.remove(movie);
+    return await this.movieRepository.remove(movie);
   }
 }

@@ -27,7 +27,7 @@ export class AuthController {
     description: 'Returns the user object if the credentials are valid.',
   })
   async signIn(@Body() loginDto: LoginDto) {
-    return this.authService.signIn(loginDto);
+    return await this.authService.signIn(loginDto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -38,7 +38,7 @@ export class AuthController {
   async signUp(
     @Body() createUsersDto: CreateUserDto,
   ): Promise<{ message: string }> {
-    this.authService.signUp(createUsersDto);
+    await this.authService.signUp(createUsersDto);
     return { message: 'User created successfully' };
   }
 

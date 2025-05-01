@@ -18,10 +18,9 @@ export class TheatersService {
   }
 
   async findAll(): Promise<Theater[]> {
-    const theaters = await this.theaterRepository.find({
+    return await this.theaterRepository.find({
       relations: ['screens'],
     });
-    return theaters;
   }
 
   async findOne(id: number): Promise<Theater> {

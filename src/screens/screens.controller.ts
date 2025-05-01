@@ -19,27 +19,31 @@ export class ScreensController {
   async create(
     @Body() createScreenDto: CreateScreenDto,
   ): Promise<{ message: string }> {
-    this.screensService.create(createScreenDto);
+    await this.screensService.create(createScreenDto);
     return { message: 'Screen created successfully' };
   }
 
   @Get()
-  findAll() {
-    return this.screensService.findAll();
+  async findAll() {
+    return await this.screensService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.screensService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.screensService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateScreenDto: UpdateScreenDto) {
-    return this.screensService.update(+id, updateScreenDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateScreenDto: UpdateScreenDto,
+  ) {
+    return await this.screensService.update(+id, updateScreenDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.screensService.remove(+id);
+  async remove(@Param('id') id: string): Promise<{ message: string }> {
+    await this.screensService.remove(+id);
+    return { message: 'Screen removed successfully' };
   }
 }

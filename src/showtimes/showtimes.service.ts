@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
 import { UpdateShowtimeDto } from './dto/update-showtime.dto';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Showtime } from './entities/showtime.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoviesService } from 'src/movies/movies.service';
@@ -21,7 +21,7 @@ export class ShowtimesService {
     if (createShowtimeDto.movieId) {
       const movie = await this.moviesService.findOne(createShowtimeDto.movieId);
       if (!movie) {
-        throw new Error('Movie not found');
+        throw new NotFoundException('Movie not found');
       }
       newShowtime.movie = movie;
     }
@@ -30,18 +30,17 @@ export class ShowtimesService {
         createShowtimeDto.screenId,
       );
       if (!screen) {
-        throw new Error('Screen not found');
+        throw new NotFoundException('Screen not found');
       }
       newShowtime.screen = screen;
     }
-    return this.showtimeRepository.save(newShowtime);
+    return await this.showtimeRepository.save(newShowtime);
   }
 
   async findAll(): Promise<Showtime[]> {
-    const showtimes = await this.showtimeRepository.find({
+    return await this.showtimeRepository.find({
       relations: ['movie', 'screen'],
     });
-    return showtimes;
   }
 
   async findOne(id: number): Promise<Showtime | undefined> {
