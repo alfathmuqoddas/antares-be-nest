@@ -16,5 +16,5 @@ export class CreateScreenDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  theaterId: number;
+  theaterId: string;
 }

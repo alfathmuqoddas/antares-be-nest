@@ -46,7 +46,7 @@ export class MoviesController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Movie> {
-    return await this.moviesService.findOne(+id);
+    return await this.moviesService.findOne(id);
   }
 
   @Get('imdbId/:imdbId')
@@ -59,7 +59,7 @@ export class MoviesController {
     @Param('id') id: string,
     @Body() updateMovieDto: UpdateMovieDto,
   ): Promise<{ message: string }> {
-    await this.moviesService.update(+id, updateMovieDto);
+    await this.moviesService.update(id, updateMovieDto);
     return { message: 'Movie updated successfully' };
   }
 

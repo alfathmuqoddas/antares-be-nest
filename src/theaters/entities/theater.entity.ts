@@ -13,7 +13,7 @@ import { Screen } from '../../screens/entities/screen.entity';
 export class Theater {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ApiProperty()
   @Column()

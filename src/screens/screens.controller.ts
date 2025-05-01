@@ -30,7 +30,7 @@ export class ScreensController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.screensService.findOne(+id);
+    return await this.screensService.findOne(id);
   }
 
   @Patch(':id')
@@ -38,12 +38,12 @@ export class ScreensController {
     @Param('id') id: string,
     @Body() updateScreenDto: UpdateScreenDto,
   ) {
-    return await this.screensService.update(+id, updateScreenDto);
+    return await this.screensService.update(id, updateScreenDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<{ message: string }> {
-    await this.screensService.remove(+id);
+    await this.screensService.remove(id);
     return { message: 'Screen removed successfully' };
   }
 }

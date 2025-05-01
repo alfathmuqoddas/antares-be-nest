@@ -27,7 +27,7 @@ export class ShowtimesController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.showtimesService.findOne(+id);
+    return await this.showtimesService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,11 +35,11 @@ export class ShowtimesController {
     @Param('id') id: string,
     @Body() updateShowtimeDto: UpdateShowtimeDto,
   ) {
-    return await this.showtimesService.update(+id, updateShowtimeDto);
+    return await this.showtimesService.update(id, updateShowtimeDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.showtimesService.remove(+id);
+    return await this.showtimesService.remove(id);
   }
 }

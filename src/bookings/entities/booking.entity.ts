@@ -11,15 +11,15 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Booking {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ApiProperty()
   @Column()
-  userId: number;
+  userId: string;
 
   @ApiProperty()
   @Column()
-  showtimeId: number;
+  showtimeId: string;
 
   @ApiProperty()
   @Column()

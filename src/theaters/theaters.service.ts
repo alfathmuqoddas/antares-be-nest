@@ -23,7 +23,7 @@ export class TheatersService {
     });
   }
 
-  async findOne(id: number): Promise<Theater> {
+  async findOne(id: string): Promise<Theater> {
     const theater = await this.theaterRepository.findOne({
       where: { id },
       relations: ['screens'],
@@ -34,11 +34,11 @@ export class TheatersService {
     return theater;
   }
 
-  update(id: number, updateTheaterDto: UpdateTheaterDto) {
+  update(id: string, updateTheaterDto: UpdateTheaterDto) {
     return `This action updates a #${id} theater`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     this.theaterRepository.delete(id);
   }
 }

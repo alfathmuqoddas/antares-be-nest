@@ -43,7 +43,7 @@ export class ShowtimesService {
     });
   }
 
-  async findOne(id: number): Promise<Showtime | undefined> {
+  async findOne(id: string): Promise<Showtime | undefined> {
     const showtime = await this.showtimeRepository.findOne({
       where: { id },
       relations: ['movie', 'screen'],
@@ -54,11 +54,11 @@ export class ShowtimesService {
     return showtime;
   }
 
-  update(id: number, updateShowtimeDto: UpdateShowtimeDto) {
+  update(id: string, updateShowtimeDto: UpdateShowtimeDto) {
     return `This action updates a #${id} showtime`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} showtime`;
   }
 }

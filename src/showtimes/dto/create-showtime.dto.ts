@@ -5,7 +5,7 @@ export class CreateShowtimeDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  movieId: number;
+  movieId: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -23,5 +23,5 @@ export class CreateShowtimeDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  screenId: number;
+  screenId: string;
 }

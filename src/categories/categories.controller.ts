@@ -39,7 +39,7 @@ export class CategoriesController {
 
   @Get(':id')
   @ApiOkResponse({ description: 'Returns a category by id.', type: Category })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Category> {
+  findOne(@Param('id', ParseIntPipe) id: string): Promise<Category> {
     return this.categoriesService.findOne(id);
   }
 
@@ -49,7 +49,7 @@ export class CategoriesController {
     type: Category,
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
     return this.categoriesService.update(id, updateCategoryDto);
@@ -60,7 +60,7 @@ export class CategoriesController {
     description: 'Category successfully deleted.',
     type: Category,
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  remove(@Param('id', ParseIntPipe) id: string): Promise<void> {
     return this.categoriesService.remove(id);
   }
 }

@@ -16,7 +16,7 @@ import { Showtime } from 'src/showtimes/entities/showtime.entity';
 export class Screen {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ApiProperty()
   @Column()
@@ -44,5 +44,5 @@ export class Screen {
   theater: Theater;
 
   @Column({ nullable: true })
-  theaterId: number;
+  theaterId: string;
 }

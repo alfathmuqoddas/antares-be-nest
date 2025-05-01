@@ -15,7 +15,7 @@ import { Movie } from 'src/movies/entities/movie.entity';
 export class Showtime {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ApiProperty()
   @Column()
@@ -40,12 +40,12 @@ export class Showtime {
   screen: Screen;
 
   @Column({ nullable: true })
-  screenId: number;
+  screenId: string;
 
   @ManyToOne(() => Movie, (movie) => movie.showtimes)
   @JoinColumn({ name: 'movieId' })
   movie: Movie;
 
   @Column({ nullable: true })
-  movieId: number;
+  movieId: string;
 }

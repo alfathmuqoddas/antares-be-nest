@@ -11,7 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Category {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ApiProperty()
   @Column({ unique: true })

@@ -82,7 +82,7 @@ export class MoviesService {
     });
   }
 
-  async findOne(id: number): Promise<Movie> {
+  async findOne(id: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: { id },
       relations: ['showtimes'],
@@ -104,7 +104,7 @@ export class MoviesService {
     return movie;
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
+  update(id: string, updateMovieDto: UpdateMovieDto) {
     return `This action updates a #${id} movie`;
   }
 

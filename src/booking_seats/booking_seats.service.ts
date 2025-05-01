@@ -12,15 +12,15 @@ export class BookingSeatsService {
     return `This action returns all bookingSeats`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} bookingSeat`;
   }
 
-  update(id: number, updateBookingSeatDto: UpdateBookingSeatDto) {
+  update(id: string, updateBookingSeatDto: UpdateBookingSeatDto) {
     return `This action updates a #${id} bookingSeat`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} bookingSeat`;
   }
 }

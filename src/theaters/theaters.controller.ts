@@ -42,7 +42,7 @@ export class TheatersController {
   @Get(':id')
   @ApiOkResponse({ description: 'Returns a theater by id.', type: Theater })
   async findOne(@Param('id') id: string): Promise<Theater> {
-    return await this.theatersService.findOne(+id);
+    return await this.theatersService.findOne(id);
   }
 
   @Patch(':id')
@@ -54,7 +54,7 @@ export class TheatersController {
     @Param('id') id: string,
     @Body() updateTheaterDto: UpdateTheaterDto,
   ) {
-    return await this.theatersService.update(+id, updateTheaterDto);
+    return await this.theatersService.update(id, updateTheaterDto);
   }
 
   @Delete(':id')
@@ -63,6 +63,6 @@ export class TheatersController {
     type: Theater,
   })
   async remove(@Param('id') id: string) {
-    return await this.theatersService.remove(+id);
+    return await this.theatersService.remove(id);
   }
 }

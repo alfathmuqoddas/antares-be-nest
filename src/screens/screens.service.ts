@@ -33,7 +33,7 @@ export class ScreensService {
     });
   }
 
-  async findOne(id: number): Promise<Screen | undefined> {
+  async findOne(id: string): Promise<Screen | undefined> {
     const screen = await this.screenRepository.findOne({
       where: { id },
       relations: ['theater', 'showtimes'],
@@ -44,11 +44,11 @@ export class ScreensService {
     return screen;
   }
 
-  update(id: number, updateScreenDto: UpdateScreenDto) {
+  update(id: string, updateScreenDto: UpdateScreenDto) {
     return `This action updates a #${id} screen`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} screen`;
   }
 }
