@@ -13,7 +13,7 @@ import { Showtime } from 'src/showtimes/entities/showtime.entity';
 @Entity()
 export class Movie {
   @ApiProperty()
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @ApiProperty()

@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger';
 @Entity()
 export class Booking {
   @ApiProperty()
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @ApiProperty()

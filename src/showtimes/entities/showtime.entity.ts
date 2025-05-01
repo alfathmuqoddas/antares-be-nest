@@ -14,7 +14,7 @@ import { Movie } from 'src/movies/entities/movie.entity';
 @Entity()
 export class Showtime {
   @ApiProperty()
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @ApiProperty()
@@ -26,7 +26,7 @@ export class Showtime {
   endTime: Date;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   ticketPrice: number;
 
   @CreateDateColumn()

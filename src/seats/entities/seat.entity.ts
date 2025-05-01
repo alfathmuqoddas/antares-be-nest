@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger';
 @Entity()
 export class Seat {
   @ApiProperty()
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @ApiProperty()
