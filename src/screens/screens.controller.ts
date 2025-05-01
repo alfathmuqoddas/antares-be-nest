@@ -16,8 +16,11 @@ export class ScreensController {
   constructor(private readonly screensService: ScreensService) {}
 
   @Post()
-  create(@Body() createScreenDto: CreateScreenDto) {
-    return this.screensService.create(createScreenDto);
+  async create(
+    @Body() createScreenDto: CreateScreenDto,
+  ): Promise<{ message: string }> {
+    this.screensService.create(createScreenDto);
+    return { message: 'Screen created successfully' };
   }
 
   @Get()

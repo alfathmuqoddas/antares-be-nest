@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Repository } from 'typeorm';
 import { AxiosResponse } from 'axios';
@@ -18,11 +22,11 @@ export class MoviesService {
     private movieRepository: Repository<Movie>,
   ) {}
 
-  async fetchMovieDataAndSave(imdbId: string): Promise<{ message: string }> {
+  async fetchMovieDataAndSave(imdbId: string): Promise<void> {
     try {
       const movie = await this.movieRepository.findOneBy({ imdbId });
       if (movie) {
-        return { message: 'Movie data already exists' };
+        throw new ConflictException('Movie already exists');
       }
       const response = await this.httpService
         .get<MovieResponseDto>(
@@ -58,20 +62,18 @@ export class MoviesService {
         movie.awards = response.Awards;
         movie.poster = response.Poster;
         movie.imdbRating = response.imdbRating;
-
         await this.movieRepository.save(movie);
-        return { message: 'Movie data saved successfully' };
       } else {
-        return { message: 'No movie data found' };
+        throw new NotFoundException('Movie not found');
       }
     } catch (error) {
-      return { message: 'Unexpected error fetching movie data' };
+      throw new Error('Unexpected error fetching movie data');
     }
   }
 
-  async create(createMovieDto: CreateMovieDto): Promise<{ message: string }> {
-    await this.movieRepository.save(createMovieDto);
-    return { message: 'Movie created successfully' };
+  async create(createMovieDto: CreateMovieDto): Promise<Movie> {
+    const newMovie = this.movieRepository.create(createMovieDto);
+    return await this.movieRepository.save(newMovie);
   }
 
   async findAll(): Promise<Movie[]> {
@@ -107,12 +109,11 @@ export class MoviesService {
     return `This action updates a #${id} movie`;
   }
 
-  async remove(imdbId: string): Promise<{ message: string }> {
+  async remove(imdbId: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({ where: { imdbId } });
     if (!movie) {
       throw new NotFoundException('Movie not found');
     }
-    this.movieRepository.remove(movie);
-    return { message: 'Movie removed successfully' };
+    return this.movieRepository.remove(movie);
   }
 }

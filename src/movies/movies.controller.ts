@@ -28,8 +28,11 @@ export class MoviesController {
   }
 
   @Post()
-  create(@Body() createMovieDto: CreateMovieDto) {
-    return this.moviesService.create(createMovieDto);
+  async create(
+    @Body() createMovieDto: CreateMovieDto,
+  ): Promise<{ message: string }> {
+    this.moviesService.create(createMovieDto);
+    return { message: 'Movie created successfully' };
   }
 
   @Get()

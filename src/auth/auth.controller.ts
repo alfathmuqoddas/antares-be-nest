@@ -38,7 +38,8 @@ export class AuthController {
   async signUp(
     @Body() createUsersDto: CreateUserDto,
   ): Promise<{ message: string }> {
-    return this.authService.signUp(createUsersDto);
+    this.authService.signUp(createUsersDto);
+    return { message: 'User created successfully' };
   }
 
   @UseGuards(AuthGuard)

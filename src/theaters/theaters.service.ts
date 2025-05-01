@@ -11,8 +11,10 @@ export class TheatersService {
     @InjectRepository(Theater)
     private theaterRepository: Repository<Theater>,
   ) {}
-  create(createTheaterDto: CreateTheaterDto) {
-    this.theaterRepository.save(createTheaterDto);
+
+  async create(createTheaterDto: CreateTheaterDto): Promise<Theater> {
+    const newTheater = this.theaterRepository.create(createTheaterDto);
+    return this.theaterRepository.save(newTheater);
   }
 
   async findAll(): Promise<Theater[]> {
@@ -38,6 +40,6 @@ export class TheatersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} theater`;
+    this.theaterRepository.delete(id);
   }
 }

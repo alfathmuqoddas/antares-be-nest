@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -25,8 +29,16 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.usersRepository.create(createUserDto);
-    return this.usersRepository.save(user);
+    const existingUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (existingUser) {
+      throw new ConflictException('User already exists');
+    }
+
+    const newUser = this.usersRepository.create(createUserDto);
+
+    return this.usersRepository.save(newUser);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
@@ -38,12 +50,11 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id });
   }
 
-  async delete(id: number): Promise<{ status: string; message: string }> {
+  async delete(id: number): Promise<void> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    await this.usersRepository.delete(id);
-    return { status: 'success', message: 'User deleted successfully' };
+    this.usersRepository.delete(id);
   }
 }
