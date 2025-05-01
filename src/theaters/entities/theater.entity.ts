@@ -20,7 +20,7 @@ export class Theater {
   name: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
   @ApiProperty()
@@ -32,7 +32,7 @@ export class Theater {
   state: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   zip: string;
 
   @CreateDateColumn()

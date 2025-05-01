@@ -27,7 +27,7 @@ export class Screen {
   capacity: number;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   layoutDescription: string;
 
   @CreateDateColumn()

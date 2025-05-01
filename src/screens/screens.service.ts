@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateScreenDto } from './dto/create-screen.dto';
 import { UpdateScreenDto } from './dto/update-screen.dto';
 import { Repository } from 'typeorm';
@@ -20,7 +20,7 @@ export class ScreensService {
         createScreenDto.theaterId,
       );
       if (!theater) {
-        throw new Error('Theater not found');
+        throw new NotFoundException('Theater not found');
       }
       newScreen.theater = theater;
     }

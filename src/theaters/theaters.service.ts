@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Theater } from './entities/theater.entity';
 import { CreateTheaterDto } from './dto/create-theater.dto';
@@ -29,7 +29,7 @@ export class TheatersService {
       relations: ['screens'],
     });
     if (!theater) {
-      throw new Error('Theater not found');
+      throw new NotFoundException('Theater not found');
     }
     return theater;
   }
