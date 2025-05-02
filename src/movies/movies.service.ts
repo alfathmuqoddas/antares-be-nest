@@ -79,6 +79,17 @@ export class MoviesService {
   async findAll(): Promise<Movie[]> {
     return await this.movieRepository.find({
       relations: ['showtimes'],
+      // select: {
+      //   showtimes: {
+      //     startTime: true,
+      //     screen: {
+      //       name: true,
+      //       theater: {
+      //         name: true,
+      //       },
+      //     },
+      //   },
+      // },
     });
   }
 
@@ -86,6 +97,17 @@ export class MoviesService {
     const movie = await this.movieRepository.findOne({
       where: { id },
       relations: ['showtimes'],
+      // select: {
+      //   showtimes: {
+      //     startTime: true,
+      //     screen: {
+      //       name: true,
+      //       theater: {
+      //         name: true,
+      //       },
+      //     },
+      //   },
+      // },
     });
     if (!movie) {
       throw new NotFoundException('Movie not found');

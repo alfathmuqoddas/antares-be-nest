@@ -30,6 +30,14 @@ export class ScreensService {
   async findAll(): Promise<Screen[]> {
     return await this.screenRepository.find({
       relations: ['theater', 'showtimes'],
+      select: {
+        theater: {
+          name: true,
+        },
+        showtimes: {
+          startTime: true,
+        },
+      },
     });
   }
 
@@ -37,6 +45,14 @@ export class ScreensService {
     const screen = await this.screenRepository.findOne({
       where: { id },
       relations: ['theater', 'showtimes'],
+      select: {
+        theater: {
+          name: true,
+        },
+        showtimes: {
+          startTime: true,
+        },
+      },
     });
     if (!screen) {
       throw new NotFoundException('Screen not found');

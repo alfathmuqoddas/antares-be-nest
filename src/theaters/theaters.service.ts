@@ -19,14 +19,30 @@ export class TheatersService {
 
   async findAll(): Promise<Theater[]> {
     return await this.theaterRepository.find({
-      relations: ['screens'],
+      relations: ['showtimes', 'screens'],
+      select: {
+        showtimes: {
+          startTime: true,
+        },
+        screens: {
+          name: true,
+        },
+      },
     });
   }
 
   async findOne(id: string): Promise<Theater> {
     const theater = await this.theaterRepository.findOne({
       where: { id },
-      relations: ['screens'],
+      relations: ['showtimes', 'screens'],
+      select: {
+        showtimes: {
+          startTime: true,
+        },
+        screens: {
+          name: true,
+        },
+      },
     });
     if (!theater) {
       throw new NotFoundException('Theater not found');

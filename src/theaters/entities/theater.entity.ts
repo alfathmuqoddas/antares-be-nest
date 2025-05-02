@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Screen } from '../../screens/entities/screen.entity';
+import { Showtime } from 'src/showtimes/entities/showtime.entity';
 
 @Entity()
 export class Theater {
@@ -43,4 +45,7 @@ export class Theater {
 
   @OneToMany(() => Screen, (screen) => screen.theater)
   screens: Screen[];
+
+  @OneToMany(() => Showtime, (showtime) => showtime.theater)
+  showtimes: Showtime[];
 }

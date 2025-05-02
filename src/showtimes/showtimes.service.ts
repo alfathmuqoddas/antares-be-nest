@@ -39,14 +39,42 @@ export class ShowtimesService {
 
   async findAll(): Promise<Showtime[]> {
     return await this.showtimeRepository.find({
-      relations: ['movie', 'screen'],
+      relations: ['movie', 'screen', 'theater'],
+      select: {
+        theater: {
+          name: true,
+        },
+        movie: {
+          title: true,
+        },
+        screen: {
+          name: true,
+          theater: {
+            name: true,
+          },
+        },
+      },
     });
   }
 
   async findOne(id: string): Promise<Showtime | undefined> {
     const showtime = await this.showtimeRepository.findOne({
       where: { id },
-      relations: ['movie', 'screen'],
+      relations: ['movie', 'screen', 'theater'],
+      select: {
+        theater: {
+          name: true,
+        },
+        movie: {
+          title: true,
+        },
+        screen: {
+          name: true,
+          theater: {
+            name: true,
+          },
+        },
+      },
     });
     if (!showtime) {
       throw new NotFoundException('Showtime not found');
