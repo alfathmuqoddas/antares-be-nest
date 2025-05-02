@@ -6,27 +6,34 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ShowtimesService } from './showtimes.service';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
 import { UpdateShowtimeDto } from './dto/update-showtime.dto';
+import { Showtime } from './entities/showtime.entity';
 
-@Controller('showtimes')
+@Controller('api/showtimes')
 export class ShowtimesController {
   constructor(private readonly showtimesService: ShowtimesService) {}
 
   @Post()
-  async create(@Body() createShowtimeDto: CreateShowtimeDto) {
-    return await this.showtimesService.create(createShowtimeDto);
+  async create(
+    @Body() createShowtimeDto: CreateShowtimeDto,
+  ): Promise<{ message: string }> {
+    await this.showtimesService.create(createShowtimeDto);
+    return { message: 'Showtime created successfully' };
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<Showtime[]> {
     return await this.showtimesService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<Showtime | undefined> {
     return await this.showtimesService.findOne(id);
   }
 
@@ -34,12 +41,14 @@ export class ShowtimesController {
   async update(
     @Param('id') id: string,
     @Body() updateShowtimeDto: UpdateShowtimeDto,
-  ) {
-    return await this.showtimesService.update(id, updateShowtimeDto);
+  ): Promise<{ message: string }> {
+    await this.showtimesService.update(id, updateShowtimeDto);
+    return { message: 'Showtime updated successfully' };
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.showtimesService.remove(id);
+  async remove(@Param('id') id: string): Promise<{ message: string }> {
+    await this.showtimesService.remove(id);
+    return { message: 'Showtime removed successfully' };
   }
 }

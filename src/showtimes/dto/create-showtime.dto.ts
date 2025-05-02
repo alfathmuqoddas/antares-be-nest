@@ -1,20 +1,17 @@
 import { IsDate, IsNotEmpty, IsString, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class CreateShowtimeDto {
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
   movieId: string;
 
   @ApiProperty()
+  @Type(() => Date)
+  @IsDate()
   @IsNotEmpty()
-  @IsDate()
   startTime: Date;
-
-  @ApiProperty()
-  @IsDate()
-  endTime: Date;
 
   @ApiProperty()
   @IsNumber()
@@ -22,6 +19,5 @@ export class CreateShowtimeDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
   screenId: string;
 }

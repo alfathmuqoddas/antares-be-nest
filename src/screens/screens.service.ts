@@ -39,7 +39,7 @@ export class ScreensService {
       relations: ['theater', 'showtimes'],
     });
     if (!screen) {
-      throw new Error('Screen not found');
+      throw new NotFoundException('Screen not found');
     }
     return screen;
   }

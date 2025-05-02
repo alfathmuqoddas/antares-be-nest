@@ -18,12 +18,8 @@ export class Showtime {
   id: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ type: 'datetime' })
   startTime: Date;
-
-  @ApiProperty()
-  @Column({ nullable: true })
-  endTime: Date;
 
   @ApiProperty()
   @Column({ nullable: true })

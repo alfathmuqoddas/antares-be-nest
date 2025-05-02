@@ -49,16 +49,30 @@ export class ShowtimesService {
       relations: ['movie', 'screen'],
     });
     if (!showtime) {
-      throw new Error('Showtime not found');
+      throw new NotFoundException('Showtime not found');
     }
     return showtime;
   }
 
-  update(id: string, updateShowtimeDto: UpdateShowtimeDto) {
-    return `This action updates a #${id} showtime`;
+  async update(id: string, updateShowtimeDto: UpdateShowtimeDto) {
+    const showtime = await this.showtimeRepository.findOne({
+      where: { id },
+      relations: ['movie', 'screen'],
+    });
+    if (!showtime) {
+      throw new NotFoundException('Showtime not found');
+    }
+    return await this.showtimeRepository.update(id, updateShowtimeDto);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} showtime`;
+  async remove(id: string) {
+    const showtime = await this.showtimeRepository.findOne({
+      where: { id },
+      relations: ['movie', 'screen'],
+    });
+    if (!showtime) {
+      throw new NotFoundException('Showtime not found');
+    }
+    return await this.showtimeRepository.delete(id);
   }
 }
