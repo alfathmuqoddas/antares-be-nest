@@ -76,27 +76,31 @@ export class MoviesService {
     return await this.movieRepository.save(newMovie);
   }
 
+  // async findAll(): Promise<Movie[]> {
+  //   return await this.movieRepository.find({
+  //     relations: ['showtimes', 'showtimes.screen', 'showtimes.screen.theater'],
+  //     select: {
+  //       showtimes: {
+  //         startTime: true,
+  //         screen: {
+  //           name: true,
+  //           theater: {
+  //             name: true,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
+
   async findAll(): Promise<Movie[]> {
-    return await this.movieRepository.find({
-      relations: ['showtimes'],
-      // select: {
-      //   showtimes: {
-      //     startTime: true,
-      //     screen: {
-      //       name: true,
-      //       theater: {
-      //         name: true,
-      //       },
-      //     },
-      //   },
-      // },
-    });
+    return await this.movieRepository.find();
   }
 
   async findOne(id: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: { id },
-      relations: ['showtimes'],
+      // relations: ['showtimes', 'showtimes.screen', 'showtimes.screen.theater'],
       // select: {
       //   showtimes: {
       //     startTime: true,
@@ -112,6 +116,40 @@ export class MoviesService {
     if (!movie) {
       throw new NotFoundException('Movie not found');
     }
+    return movie;
+  }
+
+  async findOneWithShowtimes(id: string): Promise<Movie> {
+    const movie = await this.movieRepository
+      .createQueryBuilder('movie') // Start with the main entity alias
+      .leftJoinAndSelect('movie.showtimes', 'showtime') // Join and select showtimes (the OneToMany collection)
+      .leftJoinAndSelect('showtime.screen', 'screen') // Join and select screen from showtimes
+      .leftJoinAndSelect('screen.theater', 'theater') // Join and select theater from screen
+      .select([
+        // Explicitly select all columns you need from each level
+        'movie.id', // Always select IDs for proper hydration
+        'movie.title', // Select other movie columns (like title, releaseDate, etc.)
+        // Add other movie columns you want here
+        'showtime.id', // Select showtime columns
+        'showtime.startTime',
+        // Add other showtime columns if needed
+        'screen.id', // Select screen columns
+        'screen.name',
+        // Add other screen columns if needed
+        'theater.id', // Select theater columns
+        'theater.name',
+        // Add other theater columns if needed
+      ])
+      .where('movie.id = :id', { id }) // Filter by movie ID
+      .getOne(); // Get a single result
+
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID "${id}" not found`);
+    }
+
+    // The movie object returned by getOne() will now have the full graph
+    // movie.showtimes will contain ALL showtimes for this movie,
+    // and each showtime will have its screen and theater attached.
     return movie;
   }
 

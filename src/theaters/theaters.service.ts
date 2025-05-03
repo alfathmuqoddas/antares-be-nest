@@ -18,35 +18,72 @@ export class TheatersService {
   }
 
   async findAll(): Promise<Theater[]> {
-    return await this.theaterRepository.find({
-      relations: ['showtimes', 'screens'],
-      select: {
-        showtimes: {
-          startTime: true,
-        },
-        screens: {
-          name: true,
-        },
-      },
-    });
+    return await this.theaterRepository.find();
   }
+
+  // async findAll(): Promise<Theater[]> {
+  //   return await this.theaterRepository.find({
+  //     relations: ['screens', 'screens.showtimes', 'screens.showtimes.movie'],
+  //     select: {
+  //       screens: {
+  //         name: true,
+  //         showtimes: {
+  //           startTime: true,
+  //           movie: {
+  //             title: true,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 
   async findOne(id: string): Promise<Theater> {
     const theater = await this.theaterRepository.findOne({
       where: { id },
-      relations: ['showtimes', 'screens'],
-      select: {
-        showtimes: {
-          startTime: true,
-        },
-        screens: {
-          name: true,
-        },
-      },
+      // relations: ['screens', 'screens.showtimes', 'screens.showtimes.movie'],
+      // select: {
+      //   screens: {
+      //     name: true,
+      //     showtimes: {
+      //       startTime: true,
+      //       movie: {
+      //         title: true,
+      //       },
+      //     },
+      //   },
+      // },
     });
     if (!theater) {
       throw new NotFoundException('Theater not found');
     }
+    return theater;
+  }
+
+  async findOneWithShowtimes(id: string): Promise<Theater> {
+    const theater = await this.theaterRepository
+      .createQueryBuilder('theater') // Start with the main entity alias
+      .leftJoinAndSelect('theater.screens', 'screen') // Join and select screens
+      .leftJoinAndSelect('screen.showtimes', 'showtime') // Join and select showtimes from screens
+      .leftJoinAndSelect('showtime.movie', 'movie') // Join and select movies from showtimes
+      .select([
+        // Explicitly select all columns you need from each level
+        'theater.id', // Always select IDs for proper hydration
+        'theater.name', // Select other theater columns
+        'screen.id',
+        'screen.name', // Select screen columns
+        'showtime.id',
+        'showtime.startTime', // Select showtime columns
+        'movie.id',
+        'movie.title', // Select movie columns
+      ])
+      .where('theater.id = :id', { id }) // Filter by theater ID
+      .getOne(); // Get a single result
+
+    if (!theater) {
+      throw new NotFoundException(`Theater with ID "${id}" not found`);
+    }
+
     return theater;
   }
 

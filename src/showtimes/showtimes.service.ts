@@ -39,11 +39,8 @@ export class ShowtimesService {
 
   async findAll(): Promise<Showtime[]> {
     return await this.showtimeRepository.find({
-      relations: ['movie', 'screen', 'theater'],
+      relations: ['movie', 'screen', 'screen.theater'],
       select: {
-        theater: {
-          name: true,
-        },
         movie: {
           title: true,
         },
@@ -60,11 +57,8 @@ export class ShowtimesService {
   async findOne(id: string): Promise<Showtime | undefined> {
     const showtime = await this.showtimeRepository.findOne({
       where: { id },
-      relations: ['movie', 'screen', 'theater'],
+      relations: ['movie', 'screen'],
       select: {
-        theater: {
-          name: true,
-        },
         movie: {
           title: true,
         },

@@ -49,6 +49,11 @@ export class MoviesController {
     return await this.moviesService.findOne(id);
   }
 
+  @Get(':id/showtimes')
+  async findOneWithShowtimes(@Param('id') id: string): Promise<Movie> {
+    return await this.moviesService.findOneWithShowtimes(id);
+  }
+
   @Get('imdbId/:imdbId')
   async findOneByImdbId(@Param('imdbId') imdbId: string): Promise<Movie> {
     return await this.moviesService.findOneByImdbId(imdbId);

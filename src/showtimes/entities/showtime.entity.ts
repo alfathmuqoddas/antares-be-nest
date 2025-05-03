@@ -10,7 +10,6 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Screen } from 'src/screens/entities/screen.entity';
 import { Movie } from 'src/movies/entities/movie.entity';
-import { Theater } from 'src/theaters/entities/theater.entity';
 
 @Entity()
 export class Showtime {
@@ -45,11 +44,4 @@ export class Showtime {
 
   @Column({ nullable: true })
   movieId: string;
-
-  @ManyToOne(() => Theater, (theater) => theater.showtimes)
-  @JoinColumn({ name: 'theaterId' })
-  theater: Theater;
-
-  @Column({ nullable: true })
-  theaterId: string;
 }

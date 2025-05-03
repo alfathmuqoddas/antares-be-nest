@@ -45,6 +45,15 @@ export class TheatersController {
     return await this.theatersService.findOne(id);
   }
 
+  @Get(':id/showtimes')
+  @ApiOkResponse({
+    description: 'Returns a theater with showtimes by id.',
+    type: Theater,
+  })
+  async findOneWithShowtimes(@Param('id') id: string): Promise<Theater> {
+    return await this.theatersService.findOneWithShowtimes(id);
+  }
+
   @Patch(':id')
   @ApiOkResponse({
     description: 'Theater successfully updated.',
