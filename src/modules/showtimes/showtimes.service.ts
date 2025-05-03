@@ -79,7 +79,6 @@ export class ShowtimesService {
   async update(id: string, updateShowtimeDto: UpdateShowtimeDto) {
     const showtime = await this.showtimeRepository.findOne({
       where: { id },
-      relations: ['movie', 'screen'],
     });
     if (!showtime) {
       throw new NotFoundException('Showtime not found');
@@ -90,7 +89,6 @@ export class ShowtimesService {
   async remove(id: string) {
     const showtime = await this.showtimeRepository.findOne({
       where: { id },
-      relations: ['movie', 'screen'],
     });
     if (!showtime) {
       throw new NotFoundException('Showtime not found');

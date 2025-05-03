@@ -80,23 +80,6 @@ export class MoviesService {
     return await this.movieRepository.save(newMovie);
   }
 
-  // async findAll(): Promise<Movie[]> {
-  //   return await this.movieRepository.find({
-  //     relations: ['showtimes', 'showtimes.screen', 'showtimes.screen.theater'],
-  //     select: {
-  //       showtimes: {
-  //         startTime: true,
-  //         screen: {
-  //           name: true,
-  //           theater: {
-  //             name: true,
-  //           },
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
-
   async findAll(): Promise<Movie[]> {
     return await this.movieRepository.find();
   }
@@ -173,7 +156,6 @@ export class MoviesService {
   async findOneByImdbId(imdbId: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: { imdbId },
-      relations: ['showtimes'],
     });
     if (!movie) {
       throw new NotFoundException('Movie not found');

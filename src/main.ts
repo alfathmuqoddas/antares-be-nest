@@ -7,8 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Swagger setup
   const config = new DocumentBuilder()
-    .setTitle('Computer Store API')
-    .setDescription('The computer store API description')
+    .setTitle('Antares Project API')
+    .setDescription('Movie Booking App API documentation')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
