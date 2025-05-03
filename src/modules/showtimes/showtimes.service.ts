@@ -4,8 +4,8 @@ import { UpdateShowtimeDto } from './dto/update-showtime.dto';
 import { Not, Repository } from 'typeorm';
 import { Showtime } from './entities/showtime.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoviesService } from 'src/movies/movies.service';
-import { ScreensService } from 'src/screens/screens.service';
+import { MoviesService } from 'src/modules/movies/movies.service';
+import { ScreensService } from 'src/modules/screens/screens.service';
 
 @Injectable()
 export class ShowtimesService {

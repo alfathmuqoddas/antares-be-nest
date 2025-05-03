@@ -4,7 +4,7 @@ import { UpdateScreenDto } from './dto/update-screen.dto';
 import { Repository } from 'typeorm';
 import { Screen } from './entities/screen.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TheatersService } from 'src/theaters/theaters.service';
+import { TheatersService } from 'src/modules/theaters/theaters.service';
 
 @Injectable()
 export class ScreensService {

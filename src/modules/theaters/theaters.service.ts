@@ -4,7 +4,7 @@ import { Theater } from './entities/theater.entity';
 import { CreateTheaterDto } from './dto/create-theater.dto';
 import { UpdateTheaterDto } from './dto/update-theater.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Showtime } from 'src/showtimes/entities/showtime.entity';
+import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
 
 @Injectable()
 export class TheatersService {

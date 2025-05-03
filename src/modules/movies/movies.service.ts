@@ -12,7 +12,7 @@ import { Movie } from './entities/movie.entity';
 import { CreateMovieDto, MovieResponseDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Showtime } from 'src/showtimes/entities/showtime.entity';
+import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
 
 @Injectable()
 export class MoviesService {

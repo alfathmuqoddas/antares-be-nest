@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { RolesGuard } from './roles.guard';
 import { Role } from 'src/enums/role.enum';
-import { CreateUserDto, LoginDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto, LoginDto } from 'src/modules/users/dto/create-user.dto';
 import { Roles } from 'src/decorator/roles.decorator';
 
 @ApiTags('Auth')

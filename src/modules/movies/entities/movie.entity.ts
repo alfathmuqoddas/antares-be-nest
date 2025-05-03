@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Showtime } from 'src/showtimes/entities/showtime.entity';
+import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
 
 @Entity()
 export class Movie {

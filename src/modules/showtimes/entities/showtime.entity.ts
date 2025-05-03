@@ -8,8 +8,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Screen } from 'src/screens/entities/screen.entity';
-import { Movie } from 'src/movies/entities/movie.entity';
+import { Screen } from 'src/modules/screens/entities/screen.entity';
+import { Movie } from 'src/modules/movies/entities/movie.entity';
 
 @Entity()
 export class Showtime {
