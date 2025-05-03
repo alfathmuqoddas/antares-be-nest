@@ -12,6 +12,7 @@ import { Movie } from './entities/movie.entity';
 import { CreateMovieDto, MovieResponseDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Showtime } from 'src/showtimes/entities/showtime.entity';
 
 @Injectable()
 export class MoviesService {
@@ -20,6 +21,9 @@ export class MoviesService {
 
     @InjectRepository(Movie)
     private movieRepository: Repository<Movie>,
+
+    @InjectRepository(Showtime)
+    private showtimeRepository: Repository<Showtime>,
   ) {}
 
   async fetchMovieDataAndSave(imdbId: string): Promise<void> {
@@ -100,18 +104,6 @@ export class MoviesService {
   async findOne(id: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: { id },
-      // relations: ['showtimes', 'showtimes.screen', 'showtimes.screen.theater'],
-      // select: {
-      //   showtimes: {
-      //     startTime: true,
-      //     screen: {
-      //       name: true,
-      //       theater: {
-      //         name: true,
-      //       },
-      //     },
-      //   },
-      // },
     });
     if (!movie) {
       throw new NotFoundException('Movie not found');
@@ -119,38 +111,63 @@ export class MoviesService {
     return movie;
   }
 
-  async findOneWithShowtimes(id: string): Promise<Movie> {
-    const movie = await this.movieRepository
-      .createQueryBuilder('movie') // Start with the main entity alias
-      .leftJoinAndSelect('movie.showtimes', 'showtime') // Join and select showtimes (the OneToMany collection)
-      .leftJoinAndSelect('showtime.screen', 'screen') // Join and select screen from showtimes
-      .leftJoinAndSelect('screen.theater', 'theater') // Join and select theater from screen
-      .select([
-        // Explicitly select all columns you need from each level
-        'movie.id', // Always select IDs for proper hydration
-        'movie.title', // Select other movie columns (like title, releaseDate, etc.)
-        // Add other movie columns you want here
-        'showtime.id', // Select showtime columns
-        'showtime.startTime',
-        // Add other showtime columns if needed
-        'screen.id', // Select screen columns
-        'screen.name',
-        // Add other screen columns if needed
-        'theater.id', // Select theater columns
-        'theater.name',
-        // Add other theater columns if needed
-      ])
-      .where('movie.id = :id', { id }) // Filter by movie ID
-      .getOne(); // Get a single result
+  //
+
+  async findOneWithShowtimes(id: string): Promise<any> {
+    const movie = await this.movieRepository.findOne({ where: { id } });
 
     if (!movie) {
       throw new NotFoundException(`Movie with ID "${id}" not found`);
     }
 
-    // The movie object returned by getOne() will now have the full graph
-    // movie.showtimes will contain ALL showtimes for this movie,
-    // and each showtime will have its screen and theater attached.
-    return movie;
+    const currentDateTime = new Date();
+
+    const showtimes = await this.showtimeRepository
+      .createQueryBuilder('showtime')
+      .leftJoinAndSelect('showtime.screen', 'screen')
+      .leftJoinAndSelect('screen.theater', 'theater')
+      .where('showtime.movieId = :movieId', { movieId: movie.id })
+      .andWhere('showtime.startTime >= :currentDateTime', { currentDateTime })
+      .orderBy('theater.name', 'ASC') // Optional: Order theaters alphabetically
+      .addOrderBy('showtime.startTime', 'ASC') // Optional: Order showtimes chronologically
+      .getMany();
+
+    const theatersMap = new Map<string, any>();
+
+    showtimes.forEach((showtime) => {
+      const theater = showtime.screen.theater;
+      const screen = showtime.screen;
+
+      // If the theater hasn't been added to the map yet, initialize it
+      if (!theatersMap.has(theater.id)) {
+        theatersMap.set(theater.id, {
+          id: theater.id,
+          name: theater.name,
+          showtimes: [], // Initialize showtimes array for this theater
+        });
+      }
+
+      theatersMap.get(theater.id).showtimes.push({
+        id: showtime.id,
+        startTime: showtime.startTime,
+        ticketPrice: showtime.ticketPrice,
+        screen: {
+          // Include screen details
+          id: screen.id,
+          name: screen.name,
+        },
+      });
+    });
+
+    const theaterArray = Array.from(theatersMap.values());
+
+    const result = {
+      id: movie.id,
+      title: movie.title,
+      theaters: theaterArray,
+    };
+
+    return result;
   }
 
   async findOneByImdbId(imdbId: string): Promise<Movie> {

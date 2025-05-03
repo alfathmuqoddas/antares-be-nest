@@ -4,9 +4,10 @@ import { MoviesController } from './movies.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Movie } from './entities/movie.entity';
 import { HttpModule } from '@nestjs/axios';
+import { Showtime } from 'src/showtimes/entities/showtime.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Movie]), HttpModule],
+  imports: [TypeOrmModule.forFeature([Movie, Showtime]), HttpModule],
   controllers: [MoviesController],
   providers: [MoviesService],
   exports: [MoviesService],
