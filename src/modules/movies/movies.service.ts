@@ -163,8 +163,17 @@ export class MoviesService {
     return movie;
   }
 
-  update(id: string, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+  async update(id: string, updateMovieDto: UpdateMovieDto): Promise<Movie> {
+    const movie = await this.movieRepository.findOne({ where: { id } });
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID "${id}" not found`);
+    }
+
+    // Update the movie entity with the values from the DTO
+    Object.assign(movie, updateMovieDto);
+
+    // Save the updated movie entity
+    return await this.movieRepository.save(movie);
   }
 
   async remove(imdbId: string): Promise<Movie> {
