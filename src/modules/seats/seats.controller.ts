@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { SeatsService } from './seats.service';
 import { CreateSeatDto } from './dto/create-seat.dto';
 import { UpdateSeatDto } from './dto/update-seat.dto';
@@ -8,27 +17,31 @@ export class SeatsController {
   constructor(private readonly seatsService: SeatsService) {}
 
   @Post()
-  create(@Body() createSeatDto: CreateSeatDto) {
-    return this.seatsService.create(createSeatDto);
+  async create(@Body() createSeatDto: CreateSeatDto) {
+    return await this.seatsService.create(createSeatDto);
   }
 
   @Get()
-  findAll() {
-    return this.seatsService.findAll();
+  async findAll() {
+    return await this.seatsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.seatsService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.seatsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSeatDto: UpdateSeatDto) {
-    return this.seatsService.update(+id, updateSeatDto);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateSeatDto: UpdateSeatDto,
+  ) {
+    return await this.seatsService.update(id, updateSeatDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.seatsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.seatsService.remove(id);
+    return { message: `Seat with id ${id} deleted` };
   }
 }

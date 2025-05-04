@@ -21,6 +21,7 @@ import { Movie } from './modules/movies/entities/movie.entity';
 import { Theater } from './modules/theaters/entities/theater.entity';
 import { Screen } from './modules/screens/entities/screen.entity';
 import { Showtime } from './modules/showtimes/entities/showtime.entity';
+import { Seat } from './modules/seats/entities/seat.entity';
 
 @Module({
   imports: [
@@ -34,8 +35,18 @@ import { Showtime } from './modules/showtimes/entities/showtime.entity';
       username: 'root',
       password: 'root',
       database: 'nest-product-be',
-      entities: [Component, Category, User, Movie, Theater, Screen, Showtime],
+      entities: [
+        Component,
+        Category,
+        User,
+        Movie,
+        Theater,
+        Screen,
+        Showtime,
+        Seat,
+      ],
       synchronize: true,
+      timezone: 'Z',
     }),
     ComponentsModule,
     CategoriesModule,

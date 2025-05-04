@@ -11,6 +11,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Theater } from 'src/modules/theaters/entities/theater.entity';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
+import { Seat } from 'src/modules/seats/entities/seat.entity';
 
 @Entity()
 export class Screen {
@@ -45,4 +46,7 @@ export class Screen {
 
   @Column({ nullable: true })
   theaterId: string;
+
+  @OneToMany(() => Seat, (seat) => seat.screen)
+  seats: Seat[];
 }

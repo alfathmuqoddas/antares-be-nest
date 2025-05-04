@@ -1,26 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSeatDto } from './dto/create-seat.dto';
 import { UpdateSeatDto } from './dto/update-seat.dto';
+import { Seat } from './entities/seat.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class SeatsService {
-  create(createSeatDto: CreateSeatDto) {
-    return 'This action adds a new seat';
+  constructor(
+    @InjectRepository(Seat)
+    private seatRepository: Repository<Seat>,
+  ) {}
+
+  async create(createSeatDto: CreateSeatDto): Promise<Seat> {
+    return await this.seatRepository.save(createSeatDto);
   }
 
-  findAll() {
-    return `This action returns all seats`;
+  async findAll(): Promise<Seat[]> {
+    return await this.seatRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} seat`;
+  async findOne(id: number): Promise<Seat> {
+    const seat = await this.seatRepository.findOne({ where: { id } });
+    if (!seat) {
+      throw new NotFoundException('Seat not found');
+    }
+    return seat;
   }
 
-  update(id: number, updateSeatDto: UpdateSeatDto) {
-    return `This action updates a #${id} seat`;
+  async update(id: number, updateSeatDto: UpdateSeatDto): Promise<Seat> {
+    const seat = await this.findOne(id);
+    this.seatRepository.merge(seat, updateSeatDto);
+    return await this.seatRepository.save(seat);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} seat`;
+  async remove(id: number): Promise<void> {
+    const seat = await this.findOne(id);
+    await this.seatRepository.remove(seat);
   }
 }

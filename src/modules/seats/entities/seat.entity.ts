@@ -4,18 +4,17 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Screen } from 'src/modules/screens/entities/screen.entity';
 
 @Entity()
 export class Seat {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: number;
-
-  @ApiProperty()
-  @Column()
-  screenId: number;
 
   @ApiProperty()
   @Column()
@@ -34,4 +33,11 @@ export class Seat {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => Screen, (screen) => screen.seats)
+  @JoinColumn({ name: 'screenId' })
+  screen: Screen;
+
+  @Column({ nullable: true })
+  screenId: string;
 }
