@@ -27,7 +27,7 @@ export class User {
   password?: string; // Make it optional for create/update DTOs
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   roles: string;
 
   @ApiProperty()
