@@ -15,6 +15,7 @@ export class CreateMovieDto {
   awards: string;
   poster: string;
   imdbRating: string;
+  nowPlaying: boolean;
 }
 
 export class MovieResponseDto {

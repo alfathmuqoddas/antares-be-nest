@@ -44,6 +44,11 @@ export class MoviesController {
     return await this.moviesService.findAll();
   }
 
+  @Get('now-playing')
+  async findNowPlaying(): Promise<Movie[]> {
+    return await this.moviesService.findNowPlaying();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Movie> {
     return await this.moviesService.findOne(id);

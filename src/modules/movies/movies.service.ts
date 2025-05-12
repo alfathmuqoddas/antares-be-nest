@@ -163,6 +163,13 @@ export class MoviesService {
     return movie;
   }
 
+  async findNowPlaying(): Promise<Movie[]> {
+    return await this.movieRepository.find({
+      where: { nowPlaying: true },
+      order: { updatedAt: 'DESC' },
+    });
+  }
+
   async update(id: string, updateMovieDto: UpdateMovieDto): Promise<Movie> {
     const movie = await this.movieRepository.findOne({ where: { id } });
     if (!movie) {

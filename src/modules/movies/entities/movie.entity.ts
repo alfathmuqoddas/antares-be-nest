@@ -79,6 +79,10 @@ export class Movie {
   @ApiProperty({ default: '' })
   imdbRating: string;
 
+  @ApiProperty()
+  @Column({ default: true })
+  nowPlaying: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 
