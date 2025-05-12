@@ -28,6 +28,7 @@ export class TheatersService {
   async findOne(id: string): Promise<Theater> {
     const theater = await this.theaterRepository.findOne({
       where: { id },
+      relations: ['screens'],
     });
     if (!theater) {
       throw new NotFoundException('Theater not found');

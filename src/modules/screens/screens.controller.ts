@@ -37,8 +37,9 @@ export class ScreensController {
   async update(
     @Param('id') id: string,
     @Body() updateScreenDto: UpdateScreenDto,
-  ) {
-    return await this.screensService.update(id, updateScreenDto);
+  ): Promise<{ message: string }> {
+    this.screensService.update(id, updateScreenDto);
+    return { message: 'Screen updated successfully' };
   }
 
   @Delete(':id')
