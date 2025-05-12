@@ -62,8 +62,9 @@ export class TheatersController {
   async update(
     @Param('id') id: string,
     @Body() updateTheaterDto: UpdateTheaterDto,
-  ) {
-    return await this.theatersService.update(id, updateTheaterDto);
+  ): Promise<{ message: string }> {
+    this.theatersService.update(id, updateTheaterDto);
+    return { message: 'Theater updated successfully' };
   }
 
   @Delete(':id')

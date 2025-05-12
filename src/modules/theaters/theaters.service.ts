@@ -93,11 +93,20 @@ export class TheatersService {
     return result;
   }
 
-  update(id: string, updateTheaterDto: UpdateTheaterDto) {
-    return `This action updates a #${id} theater`;
+  async update(id: string, updateTheaterDto: UpdateTheaterDto) {
+    const theater = await this.theaterRepository.findOne({ where: { id } });
+    if (!theater) {
+      throw new NotFoundException('Theater not found');
+    }
+    Object.assign(theater, updateTheaterDto);
+    return await this.theaterRepository.save(theater);
   }
 
-  remove(id: string) {
-    this.theaterRepository.delete(id);
+  async remove(id: string) {
+    const theater = await this.theaterRepository.findOne({ where: { id } });
+    if (!theater) {
+      throw new NotFoundException('Theater not found');
+    }
+    return await this.theaterRepository.delete(id);
   }
 }
