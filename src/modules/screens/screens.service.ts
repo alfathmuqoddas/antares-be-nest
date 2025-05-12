@@ -29,13 +29,10 @@ export class ScreensService {
 
   async findAll(): Promise<Screen[]> {
     return await this.screenRepository.find({
-      relations: ['theater', 'showtimes'],
+      relations: ['theater'],
       select: {
         theater: {
           name: true,
-        },
-        showtimes: {
-          startTime: true,
         },
       },
     });
@@ -44,13 +41,10 @@ export class ScreensService {
   async findOne(id: string): Promise<Screen | undefined> {
     const screen = await this.screenRepository.findOne({
       where: { id },
-      relations: ['theater', 'showtimes'],
+      relations: ['theater'],
       select: {
         theater: {
           name: true,
-        },
-        showtimes: {
-          startTime: true,
         },
       },
     });
@@ -60,11 +54,20 @@ export class ScreensService {
     return screen;
   }
 
-  update(id: string, updateScreenDto: UpdateScreenDto) {
-    return `This action updates a #${id} screen`;
+  async update(id: string, updateScreenDto: UpdateScreenDto) {
+    const screen = await this.screenRepository.findOne({ where: { id } });
+    if (!screen) {
+      throw new NotFoundException('Screen not found');
+    }
+    Object.assign(screen, updateScreenDto);
+    return await this.screenRepository.save(screen);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} screen`;
+  async remove(id: string) {
+    const screen = await this.screenRepository.findOne({ where: { id } });
+    if (!screen) {
+      throw new NotFoundException('Screen not found');
+    }
+    return await this.screenRepository.delete(id);
   }
 }
