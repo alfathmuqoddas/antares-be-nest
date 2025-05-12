@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateScreenDto {
@@ -12,7 +12,14 @@ export class CreateScreenDto {
   capacity: number;
 
   @ApiProperty()
+  screenType: string;
+
+  @ApiProperty()
   layoutDescription: string;
+
+  @ApiProperty()
+  @IsNumber()
+  ticketPrice: number;
 
   @ApiProperty()
   @IsNotEmpty()

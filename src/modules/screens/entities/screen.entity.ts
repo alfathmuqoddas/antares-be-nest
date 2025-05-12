@@ -24,8 +24,16 @@ export class Screen {
   name: string;
 
   @ApiProperty()
+  @Column({ default: 'regular' })
+  screenType: string;
+
+  @ApiProperty()
   @Column()
   capacity: number;
+
+  @ApiProperty()
+  @Column({ default: 0 })
+  ticketPrice: number;
 
   @ApiProperty()
   @Column({ nullable: true })
