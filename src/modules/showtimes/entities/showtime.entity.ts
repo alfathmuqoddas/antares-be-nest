@@ -25,10 +25,10 @@ export class Showtime {
   @Column({ nullable: true })
   ticketPrice: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'datetime' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 
   @ManyToOne(() => Screen, (screen) => screen.showtimes)

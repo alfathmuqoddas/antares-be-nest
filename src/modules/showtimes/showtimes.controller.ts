@@ -37,6 +37,13 @@ export class ShowtimesController {
     return await this.showtimesService.findOne(id);
   }
 
+  @Get('theater/:theaterId')
+  async findByTheaterId(
+    @Param('theaterId') theaterId: string,
+  ): Promise<Showtime[]> {
+    return await this.showtimesService.findByTheaterId(theaterId);
+  }
+
   @Patch(':id')
   async update(
     @Param('id') id: string,

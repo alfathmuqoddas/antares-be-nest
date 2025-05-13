@@ -76,6 +76,24 @@ export class ShowtimesService {
     return showtime;
   }
 
+  async findByTheaterId(theaterId: string): Promise<Showtime[]> {
+    return await this.showtimeRepository.find({
+      where: { screen: { theaterId } },
+      relations: ['movie', 'screen'],
+      select: {
+        movie: {
+          title: true,
+        },
+        screen: {
+          name: true,
+          theater: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
+
   async update(id: string, updateShowtimeDto: UpdateShowtimeDto) {
     const showtime = await this.showtimeRepository.findOne({
       where: { id },
