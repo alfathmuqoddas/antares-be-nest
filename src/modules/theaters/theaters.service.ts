@@ -53,7 +53,7 @@ export class TheatersService {
       .leftJoinAndSelect('showtime.movie', 'movie') // Join with Movie
       .where('screen.theaterId = :theaterId', { theaterId: theater.id }) // Filter by the theater
       // Add the condition to filter showtimes by startTime >= currentDateTime
-      .andWhere('showtime.startTime >= :currentDateTime', { currentDateTime })
+      // .andWhere('showtime.startTime >= :currentDateTime', { currentDateTime })
       .orderBy('movie.title', 'ASC') // Optional: Order movies by title
       .addOrderBy('showtime.startTime', 'ASC') // Optional: Order showtimes by start time
       .getMany(); // Execute the

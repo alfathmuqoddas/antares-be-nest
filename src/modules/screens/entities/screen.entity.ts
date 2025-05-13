@@ -32,10 +32,6 @@ export class Screen {
   capacity: number;
 
   @ApiProperty()
-  @Column({ default: 0 })
-  ticketPrice: number;
-
-  @ApiProperty()
   @Column({ nullable: true })
   layoutDescription: string;
 

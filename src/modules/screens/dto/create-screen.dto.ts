@@ -18,10 +18,6 @@ export class CreateScreenDto {
   layoutDescription: string;
 
   @ApiProperty()
-  @IsNumber()
-  ticketPrice: number;
-
-  @ApiProperty()
   @IsNotEmpty()
   theaterId: string;
 }
