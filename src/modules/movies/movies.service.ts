@@ -97,6 +97,7 @@ export class MoviesService {
   //
 
   async findOneWithShowtimes(id: string): Promise<any> {
+    // Step 1: Fetch the movie
     const movie = await this.movieRepository.findOne({ where: { id } });
 
     if (!movie) {
@@ -105,54 +106,84 @@ export class MoviesService {
 
     const currentDateTime = new Date();
 
+    // Step 2: Fetch showtimes for the movie, joining with screen and then theater
+    // Showtimes are filtered to be current or in the future.
     const showtimes = await this.showtimeRepository
       .createQueryBuilder('showtime')
-      .leftJoinAndSelect('showtime.screen', 'screen')
-      .leftJoinAndSelect('screen.theater', 'theater')
-      .where('showtime.movieId = :movieId', { movieId: movie.id })
+      .leftJoinAndSelect('showtime.screen', 'screen') // Join with Screen
+      .leftJoinAndSelect('screen.theater', 'theater') // Join Screen with Theater
+      .where('showtime.movieId = :movieId', { movieId: movie.id }) // Filter by the movie ID
+      // Filter showtimes to be greater than or equal to the current date and time.
+      // If you want to include past showtimes, comment out the next line.
       .andWhere('showtime.startTime >= :currentDateTime', { currentDateTime })
-      .orderBy('theater.name', 'ASC') // Optional: Order theaters alphabetically
-      .addOrderBy('showtime.startTime', 'ASC') // Optional: Order showtimes chronologically
-      .getMany();
+      .orderBy('theater.name', 'ASC') // Order theaters alphabetically
+      .addOrderBy('screen.screenType', 'ASC') // Then order by screen type
+      .addOrderBy('showtime.startTime', 'ASC') // Then order showtimes chronologically
+      .getMany(); // Execute the query
 
+    // Step 3: Process showtimes to group them by theater and then by screenType
     const theatersMap = new Map<string, any>();
 
     showtimes.forEach((showtime) => {
+      // Ensure screen and theater data are available (they should be due to leftJoinAndSelect)
+      if (!showtime.screen || !showtime.screen.theater) {
+        console.warn(
+          `Skipping showtime ${showtime.id} due to missing screen or theater data.`,
+        );
+        return; // Skip this showtime if essential linked data is missing
+      }
       const theater = showtime.screen.theater;
       const screen = showtime.screen;
 
-      // If the theater hasn't been added to the map yet, initialize it
+      // If the theater hasn't been added to the map yet, initialize it.
+      // Each theater will have a 'screenTypes' object to hold showtimes grouped by screen type.
       if (!theatersMap.has(theater.id)) {
         theatersMap.set(theater.id, {
           id: theater.id,
           name: theater.name,
-          showtimes: [], // Initialize showtimes array for this theater
+          // other theater details you might want to include (e.g., address)
+          // address: theater.address,
+          screenTypes: {}, // This object will store showtimes grouped by screen type for this theater
         });
       }
 
-      theatersMap.get(theater.id).showtimes.push({
+      const theaterEntry = theatersMap.get(theater.id);
+      const screenType = screen.screenType; // e.g., "2D", "3D", "IMAX"
+
+      // If this screenType is not yet a key in the theater's screenTypes object, initialize it with an empty array.
+      if (!theaterEntry.screenTypes[screenType]) {
+        theaterEntry.screenTypes[screenType] = [];
+      }
+
+      // Add the current showtime details to the appropriate screenType array for the theater.
+      theaterEntry.screenTypes[screenType].push({
         id: showtime.id,
         startTime: showtime.startTime,
         ticketPrice: showtime.ticketPrice,
         screen: {
-          // Include screen details
+          // Include screen details for this specific showtime
           id: screen.id,
           name: screen.name,
+          // screen.screenType is already used for grouping, but can be included if needed
         },
+        // other showtime details you might want to include (e.g., availableSeats)
       });
     });
 
+    // Convert the map of theaters to an array
     const theaterArray = Array.from(theatersMap.values());
 
+    // Step 4: Construct the final result object
     const result = {
       id: movie.id,
       title: movie.title,
-      theaters: theaterArray,
+      // other movie details you might want to include (e.g., posterUrl, director, duration)
+      // posterUrl: movie.posterUrl,
+      theaters: theaterArray, // The array of theaters, each with showtimes grouped by screenType
     };
 
     return result;
   }
-
   async findOneByImdbId(imdbId: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: { imdbId },

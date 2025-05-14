@@ -86,6 +86,7 @@ export class ShowtimesService {
         },
         screen: {
           name: true,
+          screenType: true,
           theater: {
             name: true,
           },
