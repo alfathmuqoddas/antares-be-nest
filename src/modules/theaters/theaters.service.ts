@@ -75,6 +75,7 @@ export class TheatersService {
         moviesMap.set(movie.id, {
           id: movie.id,
           title: movie.title,
+          poster: movie.poster,
           // other movie details you might want to include (e.g., posterUrl, duration)
           // director: movie.director,
           // releaseDate: movie.releaseDate,

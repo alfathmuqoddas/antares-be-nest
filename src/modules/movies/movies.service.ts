@@ -177,6 +177,7 @@ export class MoviesService {
     const result = {
       id: movie.id,
       title: movie.title,
+      poster: movie.poster,
       // other movie details you might want to include (e.g., posterUrl, director, duration)
       // posterUrl: movie.posterUrl,
       theaters: theaterArray, // The array of theaters, each with showtimes grouped by screenType
