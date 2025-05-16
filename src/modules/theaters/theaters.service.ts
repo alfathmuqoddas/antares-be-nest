@@ -5,6 +5,7 @@ import { CreateTheaterDto } from './dto/create-theater.dto';
 import { UpdateTheaterDto } from './dto/update-theater.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
+import { release } from 'os';
 
 @Injectable()
 export class TheatersService {
@@ -76,6 +77,10 @@ export class TheatersService {
           id: movie.id,
           title: movie.title,
           poster: movie.poster,
+          releaseDate: movie.released,
+          duration: movie.runtime,
+          genre: movie.genre,
+          rated: movie.rated,
           // other movie details you might want to include (e.g., posterUrl, duration)
           // director: movie.director,
           // releaseDate: movie.releaseDate,

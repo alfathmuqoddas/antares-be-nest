@@ -178,6 +178,10 @@ export class MoviesService {
       id: movie.id,
       title: movie.title,
       poster: movie.poster,
+      releaseDate: movie.released,
+      duration: movie.runtime,
+      genre: movie.genre,
+      rated: movie.rated,
       // other movie details you might want to include (e.g., posterUrl, director, duration)
       // posterUrl: movie.posterUrl,
       theaters: theaterArray, // The array of theaters, each with showtimes grouped by screenType
