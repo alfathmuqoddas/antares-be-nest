@@ -25,7 +25,7 @@ export class Seat {
   columnNumber: number;
 
   @ApiProperty()
-  @Column()
+  @Column({ default: true })
   isAvailable: boolean;
 
   @CreateDateColumn()

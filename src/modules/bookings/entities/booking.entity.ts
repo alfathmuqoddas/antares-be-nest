@@ -34,8 +34,8 @@ export class Booking {
   bookingReference: string;
 
   @ApiProperty()
-  @Column()
-  paymentStatus: string;
+  @Column({ default: 'pending' })
+  paymentStatus: 'pending' | 'paid' | 'canceled';
 
   @CreateDateColumn()
   createdAt: Date;

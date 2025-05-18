@@ -1,26 +1,50 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Booking } from './entities/booking.entity';
 
 @Injectable()
 export class BookingsService {
-  create(createBookingDto: CreateBookingDto) {
-    return 'This action adds a new booking';
+  constructor(
+    @InjectRepository(Booking)
+    private bookingRepository: Repository<Booking>,
+  ) {}
+
+  async create(createBookingDto: CreateBookingDto) {
+    return await this.bookingRepository.save(createBookingDto);
   }
 
-  findAll() {
-    return `This action returns all bookings`;
+  async findAll() {
+    return await this.bookingRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} booking`;
+  async findOne(id: string): Promise<Booking> {
+    const booking = await this.bookingRepository.findOne({ where: { id } });
+    if (!booking) {
+      throw new Error('Booking not found');
+    }
+    return booking;
   }
 
-  update(id: number, updateBookingDto: UpdateBookingDto) {
-    return `This action updates a #${id} booking`;
+  async update(
+    id: string,
+    updateBookingDto: UpdateBookingDto,
+  ): Promise<Booking> {
+    const booking = await this.bookingRepository.findOne({ where: { id } });
+    if (!booking) {
+      throw new Error('Booking not found');
+    }
+    this.bookingRepository.merge(booking, updateBookingDto);
+    return await this.bookingRepository.save(booking);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} booking`;
+  async remove(id: string): Promise<Booking> {
+    const booking = await this.bookingRepository.findOne({ where: { id } });
+    if (!booking) {
+      throw new Error('Booking not found');
+    }
+    return await this.bookingRepository.remove(booking);
   }
 }
