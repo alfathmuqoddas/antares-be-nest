@@ -5,7 +5,7 @@ import { CreateTheaterDto } from './dto/create-theater.dto';
 import { UpdateTheaterDto } from './dto/update-theater.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
-import { release } from 'os';
+import { SlugifyService } from '../slugify/slugify.service';
 
 @Injectable()
 export class TheatersService {
@@ -15,11 +15,28 @@ export class TheatersService {
 
     @InjectRepository(Showtime)
     private showtimeRepository: Repository<Showtime>,
+
+    private slugifyService: SlugifyService,
   ) {}
 
+  async generateUniqueSlug(title: string): Promise<string> {
+    let slug = this.slugifyService.slugify(title);
+    let count = 1;
+
+    while (await this.theaterRepository.findOne({ where: { slug } })) {
+      slug = `${this.slugifyService.slugify(title)}-${count}`;
+      count++;
+    }
+
+    return slug;
+  }
+
   async create(createTheaterDto: CreateTheaterDto): Promise<Theater> {
+    createTheaterDto.slug = await this.generateUniqueSlug(
+      createTheaterDto.name,
+    );
     const newTheater = this.theaterRepository.create(createTheaterDto);
-    return this.theaterRepository.save(newTheater);
+    return await this.theaterRepository.save(newTheater);
   }
 
   async findAll(): Promise<Theater[]> {

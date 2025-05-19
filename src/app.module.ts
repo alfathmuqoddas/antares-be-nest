@@ -23,6 +23,7 @@ import { Screen } from './modules/screens/entities/screen.entity';
 import { Showtime } from './modules/showtimes/entities/showtime.entity';
 import { Seat } from './modules/seats/entities/seat.entity';
 import { Booking } from './modules/bookings/entities/booking.entity';
+import { SlugifyModule } from './modules/slugify/slugify.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { Booking } from './modules/bookings/entities/booking.entity';
     SeatsModule,
     BookingsModule,
     BookingSeatsModule,
+    SlugifyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

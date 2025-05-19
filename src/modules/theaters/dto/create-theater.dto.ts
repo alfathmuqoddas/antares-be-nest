@@ -8,6 +8,9 @@ export class CreateTheaterDto {
   name: string;
 
   @ApiProperty()
+  slug: string;
+
+  @ApiProperty()
   @IsString()
   address: string;
 
