@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToOne,
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Screen } from '../../screens/entities/screen.entity';
@@ -14,6 +15,7 @@ import { Screen } from '../../screens/entities/screen.entity';
 export class Theater {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
+  @Index()
   id: string;
 
   @ApiProperty()

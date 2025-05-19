@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '../../../enums/role.enum';
@@ -13,7 +14,8 @@ import { Role } from '../../../enums/role.enum';
 export class User {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  @Index()
+  id: string;
 
   @ApiProperty()
   @Column()

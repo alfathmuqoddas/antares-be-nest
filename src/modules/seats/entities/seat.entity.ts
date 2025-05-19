@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Screen } from 'src/modules/screens/entities/screen.entity';
@@ -14,7 +15,8 @@ import { Screen } from 'src/modules/screens/entities/screen.entity';
 export class Seat {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  @Index()
+  id: string;
 
   @ApiProperty()
   @Column()

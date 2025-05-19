@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -11,6 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Booking {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
+  @Index()
   id: string;
 
   @ApiProperty()

@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Theater } from 'src/modules/theaters/entities/theater.entity';
@@ -17,6 +18,7 @@ import { Seat } from 'src/modules/seats/entities/seat.entity';
 export class Screen {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
+  @Index()
   id: string;
 
   @ApiProperty()

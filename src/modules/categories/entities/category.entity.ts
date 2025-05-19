@@ -4,6 +4,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -11,6 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Category {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
+  @Index()
   id: string;
 
   @ApiProperty()
