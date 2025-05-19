@@ -105,13 +105,7 @@ export class ShowtimesService {
     return await this.showtimeRepository.update(id, updateShowtimeDto);
   }
 
-  async remove(id: string) {
-    const showtime = await this.showtimeRepository.findOne({
-      where: { id },
-    });
-    if (!showtime) {
-      throw new NotFoundException('Showtime not found');
-    }
-    return await this.showtimeRepository.delete(id);
+  async remove(id: string): Promise<void> {
+    await this.showtimeRepository.delete(id);
   }
 }

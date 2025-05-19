@@ -21,7 +21,7 @@ export class SeatsService {
     return await this.seatRepository.find();
   }
 
-  async findOne(id: number): Promise<Seat> {
+  async findOne(id: string): Promise<Seat> {
     const seat = await this.seatRepository.findOne({ where: { id } });
     if (!seat) {
       throw new NotFoundException('Seat not found');
@@ -29,14 +29,16 @@ export class SeatsService {
     return seat;
   }
 
-  async update(id: number, updateSeatDto: UpdateSeatDto): Promise<Seat> {
-    const seat = await this.findOne(id);
+  async update(id: string, updateSeatDto: UpdateSeatDto): Promise<Seat> {
+    const seat = await this.seatRepository.findOne({ where: { id } });
+    if (!seat) {
+      throw new NotFoundException('Seat not found');
+    }
     this.seatRepository.merge(seat, updateSeatDto);
     return await this.seatRepository.save(seat);
   }
 
-  async remove(id: number): Promise<void> {
-    const seat = await this.findOne(id);
-    await this.seatRepository.remove(seat);
+  async remove(id: string): Promise<void> {
+    await this.seatRepository.delete(id);
   }
 }

@@ -27,20 +27,20 @@ export class SeatsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: string) {
     return await this.seatsService.findOne(id);
   }
 
   @Patch(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
     @Body() updateSeatDto: UpdateSeatDto,
   ) {
     return await this.seatsService.update(id, updateSeatDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseIntPipe) id: string) {
     await this.seatsService.remove(id);
     return { message: `Seat with id ${id} deleted` };
   }
