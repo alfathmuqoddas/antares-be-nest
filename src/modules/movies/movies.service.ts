@@ -1,13 +1,14 @@
 import {
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Repository } from 'typeorm';
-import { AxiosResponse } from 'axios';
-import { map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieDto, MovieResponseDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
@@ -31,51 +32,54 @@ export class MoviesService {
 
   async fetchMovieDataAndSave(imdbId: string): Promise<void> {
     try {
-      const movie = await this.movieRepository.findOneBy({ imdbId });
-      if (movie) {
+      const movieExist = await this.movieRepository.findOneBy({ imdbId });
+      if (movieExist) {
         throw new ConflictException('Movie already exists');
       }
-      const response = await this.httpService
-        .get<MovieResponseDto>(
-          `https://www.omdbapi.com/?i=${imdbId}&plot=full&apiKey=af1284eb`,
-        )
-        .pipe(
-          map(
-            (axiosResponse: AxiosResponse<MovieResponseDto>) =>
-              axiosResponse.data,
-          ),
-          catchError((error) => {
-            console.error('Error fetching movie data', error);
-            return of(null);
-          }),
-        )
-        .toPromise();
+      const url = `https://www.omdbapi.com/?i=${imdbId}&plot=full&apiKey=af1284eb`;
+      let response: MovieResponseDto;
 
-      if (response) {
-        const movie = new Movie();
-        movie.imdbId = response.imdbID;
-        movie.slug = this.slugifyService.slugify(response.Title);
-        movie.title = response.Title;
-        movie.year = response.Year;
-        movie.rated = response.Rated;
-        movie.released = response.Released;
-        movie.runtime = response.Runtime;
-        movie.genre = response.Genre;
-        movie.director = response.Director;
-        movie.writer = response.Writer;
-        movie.actors = response.Actors;
-        movie.plot = response.Plot;
-        movie.language = response.Language;
-        movie.country = response.Country;
-        movie.awards = response.Awards;
-        movie.poster = response.Poster;
-        movie.imdbRating = response.imdbRating;
-        await this.movieRepository.save(movie);
-      } else {
-        throw new NotFoundException('Movie not found');
+      try {
+        const axiosResponse = await lastValueFrom(
+          this.httpService.get<MovieResponseDto>(url),
+        );
+        response = axiosResponse.data;
+      } catch (error) {
+        throw new HttpException(
+          'Error fetching movie data from OMDB',
+          HttpStatus.BAD_GATEWAY,
+        );
       }
-    } catch (error) {
-      throw new Error('Unexpected error fetching movie data');
+
+      if (!response) {
+        throw new NotFoundException('Movie not found on OMDB');
+      }
+
+      const movie = Object.assign(new Movie(), {
+        imdbId: response.imdbID,
+        slug: this.slugifyService.slugify(response.Title),
+        title: response.Title,
+        year: response.Year,
+        rated: response.Rated,
+        released: response.Released,
+        runtime: response.Runtime,
+        genre: response.Genre,
+        director: response.Director,
+        writer: response.Writer,
+        actors: response.Actors,
+        plot: response.Plot,
+        language: response.Language,
+        country: response.Country,
+        awards: response.Awards,
+        poster: response.Poster,
+        imdbRating: response.imdbRating,
+      });
+
+      await this.movieRepository.save(movie);
+    } catch (error: any) {
+      throw new InternalServerErrorException(
+        `Unexpected error: ${error.message}`,
+      );
     }
   }
 
