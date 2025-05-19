@@ -54,6 +54,11 @@ export class MoviesController {
     return await this.moviesService.findOne(id);
   }
 
+  @Get('slug/:slug')
+  async findOneBySlug(@Param('slug') slug: string): Promise<Movie> {
+    return await this.moviesService.findOneBySlug(slug);
+  }
+
   @Get(':id/showtimes')
   async findOneWithShowtimes(@Param('id') id: string): Promise<Movie> {
     return await this.moviesService.findOneWithShowtimes(id);

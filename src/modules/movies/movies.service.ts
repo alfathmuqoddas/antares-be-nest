@@ -13,6 +13,7 @@ import { CreateMovieDto, MovieResponseDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
+import { SlugifyService } from '../slugify/slugify.service';
 
 @Injectable()
 export class MoviesService {
@@ -24,6 +25,8 @@ export class MoviesService {
 
     @InjectRepository(Showtime)
     private showtimeRepository: Repository<Showtime>,
+
+    private slugifyService: SlugifyService,
   ) {}
 
   async fetchMovieDataAndSave(imdbId: string): Promise<void> {
@@ -51,6 +54,7 @@ export class MoviesService {
       if (response) {
         const movie = new Movie();
         movie.imdbId = response.imdbID;
+        movie.slug = this.slugifyService.slugify(response.Title);
         movie.title = response.Title;
         movie.year = response.Year;
         movie.rated = response.Rated;
@@ -87,6 +91,16 @@ export class MoviesService {
   async findOne(id: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({
       where: { id },
+    });
+    if (!movie) {
+      throw new NotFoundException('Movie not found');
+    }
+    return movie;
+  }
+
+  async findOneBySlug(slug: string): Promise<Movie> {
+    const movie = await this.movieRepository.findOne({
+      where: { slug },
     });
     if (!movie) {
       throw new NotFoundException('Movie not found');

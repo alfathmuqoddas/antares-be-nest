@@ -19,6 +19,11 @@ export class Movie {
   id: string;
 
   @ApiProperty()
+  @Column()
+  @Index()
+  slug: string;
+
+  @ApiProperty()
   @Column({ default: '' })
   imdbId: string;
 

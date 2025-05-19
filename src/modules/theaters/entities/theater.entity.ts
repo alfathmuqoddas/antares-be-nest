@@ -24,6 +24,7 @@ export class Theater {
 
   @ApiProperty()
   @Column({ nullable: true })
+  @Index()
   slug: string;
 
   @ApiProperty()
