@@ -19,7 +19,7 @@ export class Movie {
   id: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   @Index()
   slug: string;
 
