@@ -54,6 +54,16 @@ export class TheatersService {
     return theater;
   }
 
+  async findOneBySlug(slug: string): Promise<Theater> {
+    const theater = await this.theaterRepository.findOne({
+      where: { slug },
+    });
+    if (!theater) {
+      throw new NotFoundException('Theater not found');
+    }
+    return theater;
+  }
+
   async findOneWithShowtimes(id: string): Promise<any> {
     // Step 1: Fetch the theater
     const theater = await this.theaterRepository.findOne({

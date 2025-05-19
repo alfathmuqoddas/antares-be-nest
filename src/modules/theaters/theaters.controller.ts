@@ -45,6 +45,15 @@ export class TheatersController {
     return await this.theatersService.findOne(id);
   }
 
+  @Get('slug/:slug')
+  @ApiOkResponse({
+    description: 'Returns a theater by slug.',
+    type: Theater,
+  })
+  async findOneBySlug(@Param('slug') slug: string): Promise<Theater> {
+    return await this.theatersService.findOneBySlug(slug);
+  }
+
   @Get(':id/showtimes')
   @ApiOkResponse({
     description: 'Returns a theater with showtimes by id.',
