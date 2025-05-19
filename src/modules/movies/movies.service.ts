@@ -110,12 +110,12 @@ export class MoviesService {
 
   //
 
-  async findOneWithShowtimes(id: string): Promise<any> {
+  async findOneWithShowtimes(slug: string): Promise<any> {
     // Step 1: Fetch the movie
-    const movie = await this.movieRepository.findOne({ where: { id } });
+    const movie = await this.movieRepository.findOne({ where: { slug } });
 
     if (!movie) {
-      throw new NotFoundException(`Movie with ID "${id}" not found`);
+      throw new NotFoundException(`Movie with ${slug} not found`);
     }
 
     const currentDateTime = new Date();

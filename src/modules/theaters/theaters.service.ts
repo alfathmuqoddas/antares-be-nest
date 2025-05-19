@@ -64,14 +64,14 @@ export class TheatersService {
     return theater;
   }
 
-  async findOneWithShowtimes(id: string): Promise<any> {
+  async findOneWithShowtimes(slug: string): Promise<any> {
     // Step 1: Fetch the theater
     const theater = await this.theaterRepository.findOne({
-      where: { id },
+      where: { slug },
     });
 
     if (!theater) {
-      throw new NotFoundException(`Theater with ID "${id}" not found`);
+      throw new NotFoundException(`Theater with ${slug} not found`);
     }
 
     const currentDateTime = new Date();
