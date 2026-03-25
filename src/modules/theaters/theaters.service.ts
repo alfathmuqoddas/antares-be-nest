@@ -6,6 +6,10 @@ import { UpdateTheaterDto } from './dto/update-theater.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
 import { SlugifyService } from '../slugify/slugify.service';
+import * as dayjs from 'dayjs';
+import * as customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 @Injectable()
 export class TheatersService {
@@ -64,7 +68,7 @@ export class TheatersService {
     return theater;
   }
 
-  async findOneWithShowtimes(slug: string): Promise<any> {
+  async findOneWithShowtimes(slug: string, date?: string): Promise<any> {
     // Step 1: Fetch the theater
     const theater = await this.theaterRepository.findOne({
       where: { slug },
@@ -74,7 +78,19 @@ export class TheatersService {
       throw new NotFoundException(`Theater with ${slug} not found`);
     }
 
-    const currentDateTime = new Date();
+    // 2. Define the Time Range
+    // If no date is provided, we use 'today'.
+    // We calculate the start and end of that specific day.
+    const targetDate = date || dayjs().format('DD-MM-YYYY');
+    const startOfRange = dayjs(targetDate, 'DD-MM-YYYY')
+      .startOf('day')
+      .toDate();
+    const endOfRange = dayjs(targetDate, 'DD-MM-YYYY').endOf('day').toDate();
+
+    // Safety check: If filtering for "Today", we should only show future movies.
+    // If filtering for a future date, we show the whole day.
+    const now = new Date();
+    const effectiveStart = startOfRange < now ? now : startOfRange;
 
     // Step 2: Fetch showtimes for the theater, joining with screen and movie
     // The showtimes are filtered to include only those that are current or in the future.
@@ -85,7 +101,10 @@ export class TheatersService {
       .where('screen.theaterId = :theaterId', { theaterId: theater.id }) // Filter by the theater
       // Filter showtimes to be greater than or equal to the current date and time.
       // If you want to include past showtimes, comment out the next line.
-      .andWhere('showtime.startTime >= :currentDateTime', { currentDateTime })
+      .andWhere('showtime.startTime BETWEEN :start AND :end', {
+        start: effectiveStart,
+        end: endOfRange,
+      })
       .orderBy('movie.title', 'ASC') // Order movies by title
       .addOrderBy('showtime.startTime', 'ASC') // Then order showtimes by start time
       .getMany(); // Execute the query

@@ -15,6 +15,10 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
 import { SlugifyService } from '../slugify/slugify.service';
+import * as dayjs from 'dayjs';
+import * as customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 @Injectable()
 export class MoviesService {
@@ -112,9 +116,7 @@ export class MoviesService {
     return movie;
   }
 
-  //
-
-  async findOneWithShowtimes(slug: string): Promise<any> {
+  async findOneWithShowtimes(slug: string, date?: string): Promise<any> {
     // Step 1: Fetch the movie
     const movie = await this.movieRepository.findOne({ where: { slug } });
 
@@ -122,7 +124,14 @@ export class MoviesService {
       throw new NotFoundException(`Movie with ${slug} not found`);
     }
 
-    const currentDateTime = new Date();
+    const targetDate = date || dayjs().format('DD-MM-YYYY');
+    const startOfRange = dayjs(targetDate, 'DD-MM-YYYY')
+      .startOf('day')
+      .toDate();
+    const endOfRange = dayjs(targetDate, 'DD-MM-YYYY').endOf('day').toDate();
+
+    const now = new Date();
+    const effectiveStart = startOfRange < now ? now : startOfRange;
 
     // Step 2: Fetch showtimes for the movie, joining with screen and then theater
     // Showtimes are filtered to be current or in the future.
@@ -133,7 +142,10 @@ export class MoviesService {
       .where('showtime.movieId = :movieId', { movieId: movie.id }) // Filter by the movie ID
       // Filter showtimes to be greater than or equal to the current date and time.
       // If you want to include past showtimes, comment out the next line.
-      .andWhere('showtime.startTime >= :currentDateTime', { currentDateTime })
+      .andWhere('showtime.startTime BETWEEN :start AND :end', {
+        start: effectiveStart,
+        end: endOfRange,
+      })
       .orderBy('theater.name', 'ASC') // Order theaters alphabetically
       .addOrderBy('screen.screenType', 'ASC') // Then order by screen type
       .addOrderBy('showtime.startTime', 'ASC') // Then order showtimes chronologically
@@ -159,6 +171,7 @@ export class MoviesService {
         theatersMap.set(theater.id, {
           id: theater.id,
           name: theater.name,
+          slug: theater.slug,
           // other theater details you might want to include (e.g., address)
           // address: theater.address,
           screenTypes: {}, // This object will store showtimes grouped by screen type for this theater

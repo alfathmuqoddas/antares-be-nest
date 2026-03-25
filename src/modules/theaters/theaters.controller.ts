@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TheatersService } from './theaters.service';
 import { CreateTheaterDto } from './dto/create-theater.dto';
@@ -54,13 +55,16 @@ export class TheatersController {
     return await this.theatersService.findOneBySlug(slug);
   }
 
-  @Get(':id/showtimes')
+  @Get(':slug/showtimes')
   @ApiOkResponse({
     description: 'Returns a theater with showtimes by id.',
     type: Theater,
   })
-  async findOneWithShowtimes(@Param('id') id: string): Promise<Theater> {
-    return await this.theatersService.findOneWithShowtimes(id);
+  async findOneWithShowtimes(
+    @Param('slug') slug: string,
+    @Query('date') date?: string,
+  ): Promise<Theater> {
+    return await this.theatersService.findOneWithShowtimes(slug, date);
   }
 
   @Patch(':id')
