@@ -20,17 +20,17 @@ export class Showtime {
   id: string;
 
   @ApiProperty()
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamptz' })
   startTime: Date;
 
   @ApiProperty()
   @Column({ nullable: true })
   ticketPrice: number;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
   @ManyToOne(() => Screen, (screen) => screen.showtimes)

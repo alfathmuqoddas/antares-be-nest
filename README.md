@@ -16,15 +16,18 @@ Project Antares is a movie booking application built with NestJS, TypeORM, Swagg
 3. Create a `.env` file in the root directory and add the following variables:
 
 ```
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=nest_product
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_NAME=postgres
+DB_SCHEMA=nest-product-be
+DB_PASSWORD=fddsfsdfds
 ```
 
-4. Run the migration script using `npm run typeorm migration:run`
-5. Run the application using `npm run start`
+4. Build the application using `npm run build` to generate the TypeORM entities
+5. Generate the migration script using `npm run migration:generate`
+6. Run the migration script using `npm run typeorm migration:run`
+7. Run the application using `npm run start`
 
 ## Usage
 

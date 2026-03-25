@@ -8,7 +8,6 @@ import {
   Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '../../../enums/role.enum';
 
 @Entity()
 export class User {
