@@ -12,6 +12,7 @@ import { lastValueFrom } from 'rxjs';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieDto, MovieResponseDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { MovieWithShowtimesDto } from './dto/movies-showtime-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
 import { SlugifyService } from '../slugify/slugify.service';
@@ -116,7 +117,10 @@ export class MoviesService {
     return movie;
   }
 
-  async findOneWithShowtimes(slug: string, date?: string): Promise<any> {
+  async findOneWithShowtimes(
+    slug: string,
+    date?: string,
+  ): Promise<MovieWithShowtimesDto> {
     // Step 1: Fetch the movie
     const movie = await this.movieRepository.findOne({ where: { slug } });
 

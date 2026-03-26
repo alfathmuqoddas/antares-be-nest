@@ -12,6 +12,7 @@ import {
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { MovieWithShowtimesDto } from './dto/movies-showtime-response.dto';
 import { Movie } from './entities/movie.entity';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Movies')
@@ -63,7 +64,7 @@ export class MoviesController {
   async findOneWithShowtimes(
     @Param('slug') slug: string,
     @Query('date') date?: string,
-  ): Promise<Movie> {
+  ): Promise<MovieWithShowtimesDto> {
     return await this.moviesService.findOneWithShowtimes(slug, date);
   }
 

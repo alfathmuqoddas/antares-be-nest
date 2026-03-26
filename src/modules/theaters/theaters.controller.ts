@@ -11,6 +11,7 @@ import {
 import { TheatersService } from './theaters.service';
 import { CreateTheaterDto } from './dto/create-theater.dto';
 import { UpdateTheaterDto } from './dto/update-theater.dto';
+import { TheaterWithShowtimesDto } from './dto/theater-showtime-response.dto';
 import { Theater } from './entities/theater.entity';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 
@@ -63,7 +64,7 @@ export class TheatersController {
   async findOneWithShowtimes(
     @Param('slug') slug: string,
     @Query('date') date?: string,
-  ): Promise<Theater> {
+  ): Promise<TheaterWithShowtimesDto> {
     return await this.theatersService.findOneWithShowtimes(slug, date);
   }
 

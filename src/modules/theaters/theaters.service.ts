@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { Theater } from './entities/theater.entity';
 import { CreateTheaterDto } from './dto/create-theater.dto';
 import { UpdateTheaterDto } from './dto/update-theater.dto';
+import { TheaterWithShowtimesDto } from './dto/theater-showtime-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Showtime } from 'src/modules/showtimes/entities/showtime.entity';
 import { SlugifyService } from '../slugify/slugify.service';
@@ -68,7 +69,10 @@ export class TheatersService {
     return theater;
   }
 
-  async findOneWithShowtimes(slug: string, date?: string): Promise<any> {
+  async findOneWithShowtimes(
+    slug: string,
+    date?: string,
+  ): Promise<TheaterWithShowtimesDto> {
     // Step 1: Fetch the theater
     const theater = await this.theaterRepository.findOne({
       where: { slug },
