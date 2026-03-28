@@ -41,7 +41,7 @@ export class ScreensService {
   async findOne(id: string): Promise<Screen | undefined> {
     const screen = await this.screenRepository.findOne({
       where: { id },
-      relations: ['theater'],
+      relations: ['theater', 'seats'],
       select: {
         theater: {
           name: true,

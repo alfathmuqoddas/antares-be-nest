@@ -49,6 +49,8 @@ export class Theater {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Screen, (screen) => screen.theater)
+  @OneToMany(() => Screen, (screen) => screen.theater, {
+    cascade: true,
+  })
   screens: Screen[];
 }

@@ -1,24 +1,49 @@
-import { IsBoolean, IsNumber, IsNotEmpty, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateSeatDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  rowNumber: number;
+  @IsInt()
+  @Min(0)
+  gridRow: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  columnNumber: number;
+  @IsInt()
+  @Min(0)
+  gridCol: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsBoolean()
-  isAvailable: boolean;
-
-  @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
+  rowLabel: string | null;
+
+  @IsOptional()
+  @IsInt()
+  seatNumber: number | null;
+
+  @IsNotEmpty()
+  @IsEnum(['available', 'unavailable'])
+  status: 'available' | 'unavailable';
+
+  @IsNotEmpty()
+  @IsEnum(['seat', 'aisle', 'gap'])
+  type: 'seat' | 'aisle' | 'gap';
+}
+
+// 2. DTO for the POST body
+export class CreateSeatsBulkDto {
+  @IsUUID()
   screenId: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSeatDto)
+  seats: CreateSeatDto[];
 }

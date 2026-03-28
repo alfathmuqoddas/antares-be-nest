@@ -9,16 +9,27 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { SeatsService } from './seats.service';
-import { CreateSeatDto } from './dto/create-seat.dto';
+import { CreateSeatDto, CreateSeatsBulkDto } from './dto/create-seat.dto';
 import { UpdateSeatDto } from './dto/update-seat.dto';
 
-@Controller('seats')
+@Controller('api/seats')
 export class SeatsController {
   constructor(private readonly seatsService: SeatsService) {}
 
   @Post()
-  async create(@Body() createSeatDto: CreateSeatDto) {
-    return await this.seatsService.create(createSeatDto);
+  async create(
+    @Body() createSeatDto: CreateSeatDto,
+  ): Promise<{ message: string }> {
+    await this.seatsService.create(createSeatDto);
+    return { message: 'Seat created successfully' };
+  }
+
+  @Post('bulk')
+  async createMany(
+    @Body() createSeatsBulkDto: CreateSeatsBulkDto,
+  ): Promise<{ message: string }> {
+    await this.seatsService.createManySeats(createSeatsBulkDto);
+    return { message: 'Seats created successfully' };
   }
 
   @Get()
@@ -29,6 +40,11 @@ export class SeatsController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: string) {
     return await this.seatsService.findOne(id);
+  }
+
+  @Get('byScreenId/:screenId')
+  async findByScreenId(@Param('screenId') screenId: string) {
+    return await this.seatsService.findByScreenId(screenId);
   }
 
   @Patch(':id')

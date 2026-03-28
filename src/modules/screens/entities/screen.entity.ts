@@ -46,7 +46,9 @@ export class Screen {
   @OneToMany(() => Showtime, (showtime) => showtime.screen)
   showtimes: Showtime[];
 
-  @ManyToOne(() => Theater, (theater) => theater.screens)
+  @ManyToOne(() => Theater, (theater) => theater.screens, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'theaterId' })
   theater: Theater;
 

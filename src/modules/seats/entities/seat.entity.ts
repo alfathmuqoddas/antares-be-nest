@@ -19,16 +19,36 @@ export class Seat {
   id: string;
 
   @ApiProperty()
-  @Column()
-  rowNumber: number;
+  @Column({ type: 'int' })
+  gridRow: number;
 
   @ApiProperty()
-  @Column()
-  columnNumber: number;
+  @Column({ type: 'int' })
+  gridCol: number;
 
   @ApiProperty()
-  @Column({ default: true })
-  isAvailable: boolean;
+  @Column({ type: 'varchar', nullable: true })
+  rowLabel: string | null;
+
+  @ApiProperty()
+  @Column({ type: 'int', nullable: true })
+  seatNumber: number | null;
+
+  @ApiProperty()
+  @Column({
+    type: 'enum',
+    enum: ['available', 'unavailable'],
+    default: 'available',
+  })
+  status: 'available' | 'unavailable';
+
+  @ApiProperty()
+  @Column({
+    type: 'enum',
+    enum: ['seat', 'aisle', 'gap'],
+    default: 'seat',
+  })
+  type: 'seat' | 'aisle' | 'gap';
 
   @CreateDateColumn()
   createdAt: Date;
@@ -36,7 +56,9 @@ export class Seat {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Screen, (screen) => screen.seats)
+  @ManyToOne(() => Screen, (screen) => screen.seats, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'screenId' })
   screen: Screen;
 
