@@ -7,10 +7,13 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Screen } from 'src/modules/screens/entities/screen.entity';
 import { Movie } from 'src/modules/movies/entities/movie.entity';
+import { BookingSeat } from 'src/modules/booking_seats/entities/booking_seat.entity';
+import { Booking } from 'src/modules/bookings/entities/booking.entity';
 
 @Entity()
 export class Showtime {
@@ -46,4 +49,10 @@ export class Showtime {
 
   @Column({ nullable: true })
   movieId: string;
+
+  @OneToMany(() => BookingSeat, (bookingSeat) => bookingSeat.showtime)
+  bookingSeats: BookingSeat[];
+
+  @OneToMany(() => Booking, (booking) => booking.showtime)
+  bookings: Booking[];
 }

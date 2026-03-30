@@ -80,6 +80,8 @@ export class ShowtimesService {
     return await this.showtimeRepository.find({
       where: { screen: { theaterId } },
       relations: ['movie', 'screen'],
+      take: 30,
+      order: { createdAt: 'DESC' },
       select: {
         movie: {
           title: true,

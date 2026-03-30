@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToOne,
   Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';

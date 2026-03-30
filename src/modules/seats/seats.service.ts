@@ -6,6 +6,7 @@ import { ScreensService } from '../screens/screens.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
+import { BookingSeatsService } from '../booking_seats/booking_seats.service';
 
 @Injectable()
 export class SeatsService {
@@ -13,6 +14,7 @@ export class SeatsService {
     @InjectRepository(Seat)
     private seatRepository: Repository<Seat>,
     private screenService: ScreensService,
+    private bookingSeatsService: BookingSeatsService,
   ) {}
 
   async create(createSeatDto: CreateSeatDto): Promise<Seat> {
@@ -55,6 +57,23 @@ export class SeatsService {
     return await this.seatRepository.find({
       where: { screenId },
     });
+  }
+
+  async findAvailableSeats(
+    screenId: string,
+    showtimeId: string,
+  ): Promise<Seat[]> {
+    const allSeats = await this.seatRepository.find({
+      where: { screenId },
+      order: { gridRow: 'ASC', gridCol: 'ASC' },
+    });
+    const bookedSeats =
+      await this.bookingSeatsService.findAllBookedSeatsByShowtimeId(showtimeId);
+
+    return allSeats.map((seat) => ({
+      ...seat,
+      isBooked: bookedSeats.includes(seat.id),
+    }));
   }
 
   async update(id: string, updateSeatDto: UpdateSeatDto): Promise<Seat> {

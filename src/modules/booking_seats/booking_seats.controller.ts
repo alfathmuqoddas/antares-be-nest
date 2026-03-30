@@ -11,7 +11,7 @@ import { BookingSeatsService } from './booking_seats.service';
 import { CreateBookingSeatDto } from './dto/create-booking_seat.dto';
 import { UpdateBookingSeatDto } from './dto/update-booking_seat.dto';
 
-@Controller('booking-seats')
+@Controller('api/booking-seats')
 export class BookingSeatsController {
   constructor(private readonly bookingSeatsService: BookingSeatsService) {}
 
@@ -23,11 +23,12 @@ export class BookingSeatsController {
     return { message: 'Booking seat created successfully' };
   }
 
-  @Get()
-  findAll() {
-    return this.bookingSeatsService.findAll();
+  @Get('booked/:showtimeId')
+  findAllBookedSeatsByShowtimeId(@Param('showtimeId') showtimeId: string) {
+    return this.bookingSeatsService.findAllBookedSeatsByShowtimeId(showtimeId);
   }
 
+  @Get()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.bookingSeatsService.findOne(id);

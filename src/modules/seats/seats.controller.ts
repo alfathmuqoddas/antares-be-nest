@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { SeatsService } from './seats.service';
 import { CreateSeatDto, CreateSeatsBulkDto } from './dto/create-seat.dto';
@@ -37,14 +38,22 @@ export class SeatsController {
     return await this.seatsService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: string) {
-    return await this.seatsService.findOne(id);
-  }
+  // @Get(':id')
+  // async findOne(@Param('id', ParseIntPipe) id: string) {
+  //   return await this.seatsService.findOne(id);
+  // }
 
   @Get('byScreenId/:screenId')
   async findByScreenId(@Param('screenId') screenId: string) {
     return await this.seatsService.findByScreenId(screenId);
+  }
+
+  @Get('availableSeats')
+  async findAvailableSeats(
+    @Query('showtimeId') showtimeId: string,
+    @Query('screenId') screenId: string,
+  ) {
+    return await this.seatsService.findAvailableSeats(screenId, showtimeId);
   }
 
   @Patch(':id')

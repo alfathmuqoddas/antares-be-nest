@@ -1,4 +1,3 @@
-// src/users/user.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Booking } from 'src/modules/bookings/entities/booking.entity';
 
 @Entity()
 export class User {
@@ -30,6 +31,10 @@ export class User {
   @ApiProperty()
   @Column({ nullable: true })
   roles: string;
+
+  @ApiProperty()
+  @OneToMany(() => Booking, (booking) => booking.user)
+  bookings: Booking[];
 
   @ApiProperty()
   @CreateDateColumn()
