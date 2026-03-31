@@ -50,35 +50,47 @@ export class BookingsService {
     });
   }
 
-  async findAll() {
-    return await this.bookingRepository.find();
-  }
-
-  async findOne(id: string): Promise<Booking> {
-    const booking = await this.bookingRepository.findOne({ where: { id } });
-    if (!booking) {
-      throw new Error('Booking not found');
-    }
-    return booking;
-  }
-
-  async update(
-    id: string,
-    updateBookingDto: UpdateBookingDto,
-  ): Promise<Booking> {
-    const booking = await this.bookingRepository.findOne({ where: { id } });
-    if (!booking) {
-      throw new Error('Booking not found');
-    }
-    this.bookingRepository.merge(booking, updateBookingDto);
-    return await this.bookingRepository.save(booking);
-  }
-
-  async remove(id: string): Promise<Booking> {
-    const booking = await this.bookingRepository.findOne({ where: { id } });
-    if (!booking) {
-      throw new Error('Booking not found');
-    }
-    return await this.bookingRepository.remove(booking);
+  async findAllByUserId(userId: string): Promise<Booking[]> {
+    return await this.bookingRepository.find({
+      where: { userId },
+      select: {
+        id: true,
+        bookingCode: true,
+        totalPrice: true,
+        status: true,
+        createdAt: true,
+        showtime: {
+          id: true,
+          startTime: true,
+          movie: {
+            title: true,
+            poster: true,
+          },
+          screen: {
+            name: true,
+            screenType: true,
+            theater: {
+              name: true,
+            },
+          },
+        },
+        bookingSeats: {
+          id: true,
+          seat: {
+            rowLabel: true,
+            seatNumber: true,
+          },
+        },
+      },
+      relations: [
+        'showtime',
+        'showtime.movie',
+        'showtime.screen',
+        'showtime.screen.theater',
+        'bookingSeats',
+        'bookingSeats.seat',
+      ],
+      order: { createdAt: 'DESC' },
+    });
   }
 }

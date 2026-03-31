@@ -1,15 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { GetUser } from '../users/user.decorator';
 
 @Controller('api/bookings')
 export class BookingsController {
@@ -20,26 +14,9 @@ export class BookingsController {
     return await this.bookingsService.create(createBookingDto);
   }
 
-  @Get()
-  async findAll() {
-    return await this.bookingsService.findAll();
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.bookingsService.findOne(id);
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateBookingDto: UpdateBookingDto,
-  ) {
-    return await this.bookingsService.update(id, updateBookingDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.bookingsService.remove(id);
+  @Get('my-bookings')
+  @UseGuards(AuthGuard)
+  async getMyBookings(@GetUser('userId') userId: string) {
+    return await this.bookingsService.findAllByUserId(userId);
   }
 }

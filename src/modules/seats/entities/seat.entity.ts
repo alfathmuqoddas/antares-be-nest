@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Screen } from 'src/modules/screens/entities/screen.entity';
-import { Booking } from 'src/modules/bookings/entities/booking.entity';
 import { BookingSeat } from 'src/modules/booking_seats/entities/booking_seat.entity';
 
 @Entity()
