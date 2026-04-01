@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ShowtimesService } from './showtimes.service';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
@@ -16,6 +17,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorator/roles.decorator';
+import { maxDate } from 'class-validator';
 
 @Controller('api/showtimes')
 export class ShowtimesController {
@@ -46,6 +48,29 @@ export class ShowtimesController {
     @Param('theaterId') theaterId: string,
   ): Promise<Showtime[]> {
     return await this.showtimesService.findByTheaterId(theaterId);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Get('admin/:theaterId')
+  async findByTheaterIdForAdmin(
+    @Param('theaterId') theaterId: string,
+    @Query('limit') limit?: string,
+    @Query('order') order: 'asc' | 'desc' = 'asc',
+    @Query('minDate') minDate?: string,
+    @Query('maxDate') maxDate?: string,
+    @Query('screenId') screenId?: string,
+    @Query('movieId') movieId?: string,
+  ): Promise<{ showtimes: Showtime[]; hasMore: boolean }> {
+    return await this.showtimesService.findByTheaterIdForAdmin(
+      theaterId,
+      limit,
+      order,
+      minDate,
+      maxDate,
+      screenId,
+      movieId,
+    );
   }
 
   @UseGuards(AuthGuard, RolesGuard)

@@ -1,7 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
 import { UpdateShowtimeDto } from './dto/update-showtime.dto';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { Showtime } from './entities/showtime.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoviesService } from 'src/modules/movies/movies.service';
@@ -95,6 +99,83 @@ export class ShowtimesService {
         },
       },
     });
+  }
+
+  async findByTheaterIdForAdmin(
+    theaterId: string,
+    limit: number | string = 20,
+    order: 'asc' | 'desc' = 'asc',
+    minDate?: string,
+    maxDate?: string,
+    screenId?: string,
+    movieId?: string,
+  ): Promise<{ showtimes: Showtime[]; hasMore: boolean }> {
+    if (!theaterId) throw new BadRequestException('theaterId is required');
+
+    const take = Math.min(Math.max(1, Number(limit) || 20), 100);
+
+    const now = new Date();
+    const todayStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
+
+    let startDate: Date;
+    let endDate: Date;
+
+    if (minDate) {
+      startDate = new Date(minDate);
+      startDate.setHours(0, 0, 0, 0);
+    } else {
+      startDate = todayStart; // Default: today as minDate
+    }
+
+    if (maxDate) {
+      endDate = new Date(maxDate);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      // If no maxDate, set it to a reasonable far future (e.g. 1 year from now)
+      endDate = new Date(startDate);
+      endDate.setFullYear(endDate.getFullYear() + 1);
+    }
+
+    const where: any = {
+      screen: { theaterId },
+      startTime: Between(startDate, endDate),
+    };
+
+    if (screenId) where.screenId = screenId;
+    if (movieId) where.movieId = movieId;
+
+    const [showtimes, total] = await this.showtimeRepository.findAndCount({
+      where,
+      order: {
+        startTime: 'ASC',
+        id: order === 'desc' ? 'DESC' : 'ASC',
+      },
+      take,
+      relations: ['movie', 'screen'],
+      select: {
+        movie: {
+          title: true,
+        },
+        screen: {
+          name: true,
+          screenType: true,
+          theater: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    const hasMore = total > take;
+
+    return {
+      showtimes,
+      hasMore,
+    };
   }
 
   async update(id: string, updateShowtimeDto: UpdateShowtimeDto) {
