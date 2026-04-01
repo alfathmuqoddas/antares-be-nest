@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { TheatersService } from './theaters.service';
 import { CreateTheaterDto } from './dto/create-theater.dto';
@@ -14,12 +15,18 @@ import { UpdateTheaterDto } from './dto/update-theater.dto';
 import { TheaterWithShowtimesDto } from './dto/theater-showtime-response.dto';
 import { Theater } from './entities/theater.entity';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Role } from 'src/enums/role.enum';
+import { Roles } from 'src/decorator/roles.decorator';
 
 @ApiTags('Theaters')
 @Controller('api/theaters')
 export class TheatersController {
   constructor(private readonly theatersService: TheatersService) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post()
   @ApiCreatedResponse({
     description: 'The theater has been successfully created.',
@@ -68,6 +75,8 @@ export class TheatersController {
     return await this.theatersService.findOneWithShowtimes(slug, date);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Patch(':id')
   @ApiOkResponse({
     description: 'Theater successfully updated.',
@@ -81,6 +90,8 @@ export class TheatersController {
     return { message: 'Theater updated successfully' };
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Delete(':id')
   @ApiOkResponse({
     description: 'Theater successfully deleted.',

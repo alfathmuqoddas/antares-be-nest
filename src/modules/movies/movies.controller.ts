@@ -9,6 +9,10 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Role } from 'src/enums/role.enum';
+import { Roles } from 'src/decorator/roles.decorator';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
@@ -32,6 +36,8 @@ export class MoviesController {
     return { message: 'Movie data successfully fetched and saved' };
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post()
   async create(
     @Body() createMovieDto: CreateMovieDto,
@@ -73,6 +79,8 @@ export class MoviesController {
     return await this.moviesService.findOneByImdbId(imdbId);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -82,6 +90,8 @@ export class MoviesController {
     return { message: 'Movie updated successfully' };
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<{ message: string }> {
     await this.moviesService.remove(id);

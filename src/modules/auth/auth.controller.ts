@@ -52,8 +52,8 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Get('admin-test')
   @Roles(Role.Admin)
+  @Get('admin-test')
   @ApiOkResponse({
     description: 'Returns the user object if the credentials are valid.',
   })
