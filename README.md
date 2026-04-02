@@ -29,6 +29,10 @@ DB_PASSWORD=fddsfsdfds
 6. Run the migration script using `npm run typeorm migration:run`
 7. Run the application using `npm run start`
 
+## ERD Diagram
+
+![ERD Diagram](./erd-antares.jpg)
+
 ## Usage
 
 ### Users
